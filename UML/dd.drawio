@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net" modified="2024-03-23T07:48:01.332Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0" etag="2f2hnYUOg7mJkoB3mE8Y" version="23.1.4" type="device">
+  <diagram name="Page-1" id="ODqNCXztTDY3Px8enkN7">
+    <mxGraphModel dx="1235" dy="666" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XBDBip0z0gyitF5IQjx2-1" value="&lt;div align=&quot;left&quot;&gt;&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;Web Server&lt;/div&gt;" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="90" y="230" width="610" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-4" value="&amp;lt;&amp;lt;execution environment&amp;gt;&amp;gt;&lt;br&gt;Node.js" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="110" y="290" width="270" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-20" value="&amp;lt;&amp;lt;component&amp;gt;&amp;gt;&lt;div align=&quot;left&quot;&gt;Express.js Application&lt;/div&gt;" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="130" y="344" width="210" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-15" value="&amp;lt;&amp;lt;component&amp;gt;&amp;gt;&lt;br&gt;Controllers" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="150" y="590.001923076923" width="120" height="54.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-16" value="&amp;lt;&amp;lt;component&amp;gt;&amp;gt;&lt;br&gt;Sequelize Models" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="150" y="470.00192307692305" width="120" height="54.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-14" value="&amp;lt;&amp;lt;component&amp;gt;&amp;gt;&lt;br&gt;WebSocket Server" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="150" y="410.0019230769231" width="120" height="54.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-17" value="&amp;lt;&amp;lt;component&amp;gt;&amp;gt;&lt;br&gt;Router" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="150" y="530.001923076923" width="120" height="54.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-21" value="&amp;lt;&amp;lt;execution environment&amp;gt;&amp;gt;&lt;br&gt;Database" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="470" y="280" width="190" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-22" value="&amp;lt;&amp;lt;component&amp;gt;&amp;gt;&lt;br&gt;Microsoft SQL Server" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="490" y="334" width="140" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-25" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" target="XBDBip0z0gyitF5IQjx2-21">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="380" y="340" as="sourcePoint" />
+            <mxPoint x="800" y="310" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="450" y="340" />
+              <mxPoint x="450" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-27" value="TDS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="XBDBip0z0gyitF5IQjx2-25">
+          <mxGeometry x="0.0585" y="3" relative="1" as="geometry">
+            <mxPoint x="-7" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-28" value="&lt;div align=&quot;left&quot;&gt;&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;Client&lt;br&gt;&lt;/div&gt;" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="790" y="230" width="170" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-29" value="&amp;lt;&amp;lt;Web Browser&amp;gt;&amp;gt;" style="verticalAlign=top;align=left;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="800" y="280.0019230769231" width="120" height="54.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-32" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="XBDBip0z0gyitF5IQjx2-1" target="XBDBip0z0gyitF5IQjx2-28">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="700" y="279.31" as="sourcePoint" />
+            <mxPoint x="790" y="279.31" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="720" y="295" />
+              <mxPoint x="720" y="295" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XBDBip0z0gyitF5IQjx2-33" value="HTTPS/WSS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="XBDBip0z0gyitF5IQjx2-32">
+          <mxGeometry x="0.0585" y="3" relative="1" as="geometry">
+            <mxPoint x="-3" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
