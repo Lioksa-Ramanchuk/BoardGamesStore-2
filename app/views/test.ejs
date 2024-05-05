@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="be">
+
+<head>
+  <title>Інтэрнэт-крама настольных гульняў</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel='icon' href='/images/interface/icon.png' />
+  <link rel="stylesheet" type="text/css" href="/style/account.css" />
+</head>
+
+<body>
+  <!-- <script src='/script/common.js'></script> -->
+  <div class="content">
+    <main>
+      <div class="forms-container">
+        <form id="sif__sign-in-form" autocomplete="off">
+          <p class="form-name">Уваход</p>
+          <div class="form-field">
+            <label for="sif__login">Лагін</label>
+            <input type="text" id="sif__login" name="login" required placeholder="Лагін" value="1" pattern="^\w{1,20}$" title="ад 1 да 20 сімвалаў A-Z, a-z, 0-9, _" />
+          </div>
+          <div class="form-field">
+            <label for="sif-password">Пароль</label>
+            <input type="password" id="sif__password" name="password" required placeholder="Пароль" value="1234" pattern="^.{4,20}$" title="ад 4 да 20 сімвалаў" />
+          </div>
+          <button type="submit">Увайсці</button>
+        </form>
+        <p id="error-msg" class="error-msg">lol</p>
+
+        <script>
+          const $ = document.querySelector.bind(document);
+          const $$ = document.querySelectorAll.bind(document);
+
+          const signInForm = $('#sif__sign-in-form');
+          signInForm.onsubmit = async (e) => {
+            e.preventDefault();
+            fetch('/account/api/sign-in', {
+              method: 'post',
+              body: new FormData(signInForm)
+            }).then(res => {
+              if (!res.ok) {
+                return res.text().then(err => Promise.reject(err));
+              }
+              $('#error-msg').textContent = 'xd';
+              $('#error-msg').classList.remove('hidden');
+              //document.location.href = `/account`;
+            }).catch(err => {
+              $('#error-msg').textContent = err;
+              $('#error-msg').classList.remove('hidden');
+            });
+          }
+        </script>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

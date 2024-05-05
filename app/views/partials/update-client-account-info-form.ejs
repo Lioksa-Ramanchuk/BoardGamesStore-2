@@ -1,0 +1,29 @@
+<form id="ucai__update-client-account-info-form" autocomplete="off">
+  <p class="form-name">Кліенцкія звесткі</p>
+  <div class="form-field">
+    <label for="ucai__address">Адрас дастаўкі</label>
+    <input type="text" id="ucai__address" name="address" placeholder="Адрас дастаўкі" />
+  </div>
+  <button type="submit">Абнавіць кліенцкія звесткі</button>
+</form>
+
+<script>
+  $('#ucai__update-client-account-info-form').onsubmit = async function(event) {
+    event.preventDefault();
+    fetch('/account/api/update-client-account-info', {
+      method: 'post',
+      body: new FormData(this),
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      document.location.href = `/<%= pageName %>`;
+    });
+  }
+
+  fetch('/account/api/get-account-info')
+    .then(res => res.json())
+    .then(clientAccount => {
+      $('#ucai__address').value = clientAccount.client.address;
+    });
+</script>

@@ -1,0 +1,20 @@
+<form id="sof__sign-out-form" autocomplete="off">
+  <button type="submit" class="cancel">Выйсці</button>
+</form>
+
+<script>
+  $('#sof__sign-out-form').onsubmit = async function(event) {
+    event.preventDefault();
+    if (confirm('Вы сапраўды хочаце выйсці з акаўнта?')) {
+      fetch('/account/api/sign-out', {
+        method: 'post',
+        body: new FormData(this),
+      }).then(res => {
+        if (!res.ok) {
+          return res.text().then(errorMsg => alert(errorMsg));
+        }
+        document.location.href = `/<%= pageName %>`;
+      });
+    }
+  }
+</script>

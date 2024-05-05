@@ -1,0 +1,35 @@
+<form id="cnaa__create-new-admin-account-form" autocomplete="off">
+  <p class="form-name">Дадаць адміністратара</p>
+  <div class="form-field">
+    <label for="cnaa__login">Лагін</label>
+    <input type="text" id="cnaa__login" name="login" required placeholder="Лагін" pattern="^\w{1,20}$" title="ад 1 да 20 сімвалаў A-Z, a-z, 0-9, _" />
+  </div>
+  <div class="form-field">
+    <label for="cnaa__password">Пароль</label>
+    <input type="password" id="cnaa__password" name="password" required placeholder="Пароль" pattern="^.{4,20}$" title="ад 4 да 20 сімвалаў" />
+  </div>
+  <div class="form-field">
+    <label for="cnaa__fullname">Імя</label>
+    <input type="text" id="cnaa__fullname" name="fullname" required placeholder="Імя" maxlength="255" />
+  </div>
+  <div class="form-field">
+    <label for="cnaa__email">Email</label>
+    <input type="email" id="cnaa__email" name="email" required placeholder="Email" maxlength="320" />
+  </div>
+  <button type="submit">Дадаць адміністратара</button>
+</form>
+
+<script>
+  $('#cnaa__create-new-admin-account-form').onsubmit = async function(event) {
+    event.preventDefault();
+    fetch('/account/api/create-new-admin-account', {
+      method: 'post',
+      body: new FormData(this),
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      document.location.href = `/<%= pageName %>`;
+    });
+  }
+</script>

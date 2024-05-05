@@ -1,0 +1,24 @@
+<%
+const menuItems = [
+  { text: 'Каталог', href: '/catalog', condition: () => true },
+  { text: 'Дадаць тавар', href: '/add-item', condition: () => isAdmin },
+  { text: 'Абранае', href: '/favs', condition: () => isClient },
+  { text: 'Кошык', href: '/cart', condition: () => isClient },
+  { text: 'Заказы', href: '/orders', condition: () => isAdmin || isClient },
+  { text: 'Акаўнт', href: '/account', condition: () => true },
+];
+%>
+
+<nav class="menu">
+  <ul>
+    <% menuItems.forEach(item => { %>
+    <% if (item.condition()) { %>
+    <li><a href="<%= item.href %>"><%= item.text %></a></li>
+    <% } %>
+    <% }); %>
+  </ul>
+</nav>
+
+<script>
+  $(`.menu a[href="/<%= pageName %>"`).classList.add('active');
+</script>

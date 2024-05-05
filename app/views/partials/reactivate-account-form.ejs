@@ -1,0 +1,20 @@
+<form id="daf__deactivate-account-form" autocomplete="off">
+  <button type="submit" class="cancel">Дэактывіяваць акаўнт</button>
+</form>
+
+<script>
+  $('#daf__deactivate-account-form').onsubmit = async function(event) {
+    event.preventDefault();
+    if (confirm('Вы сапраўды хочаце дэактывіяваць свой акаўнт?')) {
+      fetch('/account/api/deactivate-account', {
+        method: 'post',
+        body: new FormData(this),
+      }).then(res => {
+        if (!res.ok) {
+          return res.text().then(errorMsg => alert(errorMsg));
+        }
+        document.location.href = `/<%= pageName %>`;
+      });
+    }
+  }
+</script>

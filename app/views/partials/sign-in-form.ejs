@@ -1,0 +1,43 @@
+<form id="sif__sign-in-form" autocomplete="off">
+  <p class="form-name">Уваход</p>
+  <div class="form-field">
+    <label for="sif__login">Лагін</label>
+    <input type="text" id="sif__login" name="login" required placeholder="Лагін" pattern="^\w{1,20}$" title="ад 1 да 20 сімвалаў A-Z, a-z, 0-9, _" />
+  </div>
+  <div class="form-field">
+    <label for="sif-password">Пароль</label>
+    <input type="password" id="sif__password" name="password" required placeholder="Пароль" pattern="^.{4,20}$" title="ад 4 да 20 сімвалаў" />
+  </div>
+  <button type="submit">Увайсці</button>
+</form>
+
+<script>
+  $('#sif__sign-in-form').onsubmit = async function(event) {
+    event.preventDefault();
+    let data = new FormData(this);
+    fetch('/account/api/sign-in', {
+      method: 'post',
+      body: data,
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      if (res.status === 202) {
+        return res.text().then(msg => {
+          if (confirm(msg)) {
+            fetch('/account/api/reactivate-account', {
+              method: 'post',
+              body: data,
+            }).then(res => {
+              if (!res.ok) {
+                return res.text().then(errorMsg => alert(errorMsg));
+              }
+              document.location.href = `/<%= pageName %>`;
+            });
+          }
+        });
+      }
+      document.location.href = `/<%= pageName %>`;
+    });
+  }
+</script>

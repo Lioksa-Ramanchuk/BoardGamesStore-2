@@ -1,0 +1,43 @@
+<form id="uai__update-account-info-form" autocomplete="off">
+  <p class="form-name">Звесткі акаўнта</p>
+  <div class="form-field">
+    <label for="uai__login">Лагін</label>
+    <input type="text" id="uai__login" name="login" placeholder="Лагін" pattern="^\w{1,20}$" title="ад 1 да 20 сімвалаў A-Z, a-z, 0-9, _" />
+  </div>
+  <div class="form-field">
+    <label for="uai__password">Пароль</label>
+    <input type="password" id="uai__password" name="password" placeholder="Пароль" pattern="^.{4,20}$" title="ад 4 да 20 сімвалаў" />
+  </div>
+  <div class="form-field">
+    <label for="uai__fullname">Імя</label>
+    <input type="text" id="uai__fullname" name="fullname" placeholder="Імя" maxlength="255" />
+  </div>
+  <div class="form-field">
+    <label for="uai__email">Email</label>
+    <input type="email" id="uai__email" name="email" placeholder="Email" maxlength="320" />
+  </div>
+  <button type="submit">Абнавіць звесткі акаўнта</button>
+</form>
+
+<script>
+  $('#uai__update-account-info-form').onsubmit = async function(event) {
+    event.preventDefault();
+    fetch('/account/api/update-account-info', {
+      method: 'post',
+      body: new FormData(this),
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      document.location.href = `/<%= pageName %>`;
+    });
+  }
+
+  fetch('/account/api/get-account-info')
+    .then(res => res.json())
+    .then(account => {
+      $('#uai__login').value = account.login;
+      $('#uai__fullname').value = account.fullname;
+      $('#uai__email').value = account.email;
+    });
+</script>

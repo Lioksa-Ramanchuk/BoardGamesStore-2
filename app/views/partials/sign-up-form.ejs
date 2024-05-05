@@ -1,0 +1,39 @@
+<form id="suf__sign-up-form" autocomplete="off">
+  <p class="form-name">Рэгістрацыя</p>
+  <div class="form-field">
+    <label for="suf__login">Лагін</label>
+    <input type="text" id="suf__login" name="login" required placeholder="Лагін" pattern="^\w{1,20}$" title="ад 1 да 20 сімвалаў A-Z, a-z, 0-9, _" />
+  </div>
+  <div class="form-field">
+    <label for="suf__password">Пароль</label>
+    <input type="password" id="suf__password" name="password" required placeholder="Пароль" pattern="^.{4,20}$" title="ад 4 да 20 сімвалаў" />
+  </div>
+  <div class="form-field">
+    <label for="suf__fullname">Імя</label>
+    <input type="text" id="suf__fullname" name="fullname" required placeholder="Імя" maxlength="255" />
+  </div>
+  <div class="form-field">
+    <label for="suf__email">Email</label>
+    <input type="email" id="suf__email" name="email" required placeholder="Email" maxlength="320" />
+  </div>
+  <div class="form-field">
+    <label for="suf__address">Адрас дастаўкі</label>
+    <input type="text" id="suf__address" name="address" required placeholder="Адрас дастаўкі" maxlength="255" />
+  </div>
+  <button type="submit">Зарэгістравацца</button>
+</form>
+
+<script>
+  $('#suf__sign-up-form').onsubmit = async function(event) {
+    event.preventDefault();
+    fetch('/account/api/sign-up', {
+      method: 'post',
+      body: new FormData(this),
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      document.location.href = `/<%= pageName %>`;
+    });
+  }
+</script>

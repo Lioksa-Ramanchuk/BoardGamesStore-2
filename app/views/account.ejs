@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="be">
+
+<head>
+  <title>Акаўнт | Інтэрнэт-крама настольных гульняў</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel='icon' href='/images/interface/icon.png' />
+  <link rel="stylesheet" type="text/css" href="/style/account.css" />
+</head>
+
+<%
+var pageName = 'account';
+var isAdmin = account.role === process.env.DATABASE_ADMIN_ROLE_TITLE;
+var isClient = account.role === process.env.DATABASE_CLIENT_ROLE_TITLE;
+var isGuest = !isAdmin && !isClient;
+var globals = { pageName, isAdmin, isClient, isGuest };
+%>
+
+<body>
+  <script src='/script/common.js'></script>
+
+  <%- include('./partials/header.ejs', { ...globals }) %>
+  <div class="content">
+    <%- include('./partials/menu.ejs', { ...globals }) %>
+    <main>
+      <div class="forms-container">
+        <% if (isGuest) { %>
+        <%- include('./partials/sign-up-form.ejs', { ...globals }) %>
+        <%- include('./partials/sign-in-form.ejs', { ...globals }) %>
+        <% } %>
+        <% if (isClient) { %>
+        <%- include('./partials/update-account-info-form.ejs', { ...globals }) %>
+        <%- include('./partials/update-client-account-info-form.ejs', { ...globals }) %>
+        <% } %>
+        <% if (isAdmin) { %>
+        <%- include('./partials/update-account-info-form.ejs', { ...globals }) %>
+        <%- include('./partials/create-new-admin-account.ejs', { ...globals }) %>
+        <% } %>
+      </div>
+      <hr />
+      <div class="buttons-row">
+        <% if (isClient || isAdmin) { %>
+        <%- include('./partials/sign-out-form.ejs', { ...globals }) %>
+        <%- include('./partials/deactivate-account-form.ejs', { ...globals }) %>
+        <% } %>
+      </div>
+    </main>
+  </div>
+  <%- include('./partials/footer.ejs', { ...globals }) %>
+  <!--
+  <script>
+
+    <% if (isClient) { %> fetch(`/api/get-client-account-info`)
+      .then(res => res.json())
+      .then(info => {
+        $('#ucai-address').value = info.address;
+      });
+    <% } %>
+  </script>-->
+
+</body>
+
+</html>
