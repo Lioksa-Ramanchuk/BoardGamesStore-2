@@ -3,11 +3,13 @@ import accountRouter from './account.js';
 import addItemRouter from './add-item.js';
 import casl from 'casl';
 import catalogRouter from './catalog.js';
+import itemRouter from './item.js';
 import updateItemRouter from './update-item.js';
 
 const router = new Router();
 
 router.use('/catalog', catalogRouter);
+router.use('/item', itemRouter);
 router.use('/add-item', addItemRouter);
 router.use('/update-item', updateItemRouter);
 router.use('/account', accountRouter);

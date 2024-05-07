@@ -15,3 +15,9 @@ export function set(key, value, options) {
 export function get(key) {
   return redisClient.get(key);
 }
+
+export async function saveData() {
+  console.log('Saving Redis data to disk...');
+  await redisClient.save();
+  console.log('Redis data saved successfully.');
+}

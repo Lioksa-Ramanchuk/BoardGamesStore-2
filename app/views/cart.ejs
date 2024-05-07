@@ -52,13 +52,13 @@
           const kItemsSet = $('#items-set');
           kItemsSet.innerHTML = '';
           items.forEach(item => {
-            let [iId, iTitle, iPrice, iCartCount, iImage, iIsInStock, iIsAvailable, iIsInFavs] = item;
+            let [iId, iTitle, iPrice, iCartQuantity, iImage, iIsInStock, iIsAvailable, iIsInFavs] = item;
             kItemsSet.innerHTML += `
                             <div id="item-${iId}" class="item-block" onclick="itemBlockOnClick(event, ${iId})">
                                 <img src="${iImage}" class="item-image"/>
                                 <p class="item-title">${iTitle}</p>
                                 <p class="item-price">${iPrice.toFixed(2)} Br</p>
-                                <input type="number" min="1" max="99" value="${iCartCount}" onchange="onItemCartCountChange(event, ${iId})" onclick="event.stopPropagation()"" class="item-cart-count"/>
+                                <input type="number" min="1" max="99" value="${iCartQuantity}" onchange="onItemCartQuantityChange(event, ${iId})" onclick="event.stopPropagation()"" class=" item-cart-quantity" />
                                 <div class="item-btns">
                                     <button class="item-button item-tgl-in-favs"></button>
                                     <button class="item-button item-tgl-in-cart" style="background-image: url('/images/interface/rem_from_cart_btn.png');"></button>
@@ -101,23 +101,23 @@
       window.location.href = `/item/${id}`;
     }
 
-    function onItemCartCountChange(e, id) {
-      $(`#item-${id} .item-cart-count`).disabled = true;
-      const newItemCartCount = e.target.value;
-      fetch(`/api/update-cart-item-count`, {
+    function onItemCartQuantityChange(e, id) {
+      $(`#item-${id} .item-cart-quantity`).disabled = true;
+      const newItemCartQuantity = e.target.value;
+      fetch(`/api/update-cart-item-quantity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           item_id: id,
-          cart_count: newItemCartCount
+          cart_quantity: newItemCartQuantity
         }),
       }).then(res => {
         return res.json();
       }).then(data => {
-        $(`#item-${id} .item-cart-count`).value = data.cart_count;
-        $(`#item-${id} .item-cart-count`).disabled = false;
+        $(`#item-${id} .item-cart-quantity`).value = data.cart_quantity;
+        $(`#item-${id} .item-cart-quantity`).disabled = false;
         updateCartCost();
       });
     }

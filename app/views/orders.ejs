@@ -158,13 +158,13 @@
           const kItemsSet = $('#items-set');
           kItemsSet.innerHTML = '';
           items.forEach(item => {
-            let [iId, iTitle, iPrice, iCount, iImage] = item;
+            let [iId, iTitle, iPrice, iQuantity, iImage] = item;
             kItemsSet.innerHTML += `
                             <div id="item-${iId}" class="item-block" onclick="window.location.href = '/item/${iId}';">
                                 <img src="${iImage}" class="item-image"/>
                                 <p class="item-title">${iTitle}</p>
                                 <p class="item-price">${iPrice.toFixed(2)} Br</p>
-                                <p class="item-count">Колькасць: <b>${iCount} шт.</b></p>
+                                <p class="item-quantity">Колькасць: <b>${iQuantity} шт.</b></p>
                             </div>
                         `;
           });

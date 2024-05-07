@@ -1,7 +1,7 @@
 @import 'common.css';
 @import 'utils/item-info.css';
 
-.container {
+.item-container {
   display: flex;
   flex-flow: column nowrap;
   margin: 20px;
@@ -71,17 +71,17 @@
   max-width: 25vw;
 }
 
-.item-description-wrapper {
+.item-wide-block-wrapper {
   width: 100%;
   text-align: justify;
 }
 
-.item-description-wrapper h2 {
+.item-wide-block-wrapper h2 {
   font-weight: bolder;
   color: #4c3369;
 }
 
-.item-description-wrapper p {
+.item-wide-block-wrapper p {
   margin: 20px 0;
   text-align: justify;
   max-width: 70vw;

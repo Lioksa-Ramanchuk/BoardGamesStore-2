@@ -1,0 +1,129 @@
+<%
+var globals = { pageName, isAdmin, isClient, isGuest };
+%>
+
+<%- include('./catalog-filters.ejs', { ...globals }) %>
+<%- include('./items-set.ejs', { ...globals }) %>
+
+<script>
+  $('#cf__catalog-filters').addEventListener('change', async () => {
+    updateCatalog()
+  });
+
+  updateCatalog();
+
+  function updateCatalog() {
+    const [fTitle, fPublisher, fInStock, fCategory, fOrdering] = [
+      safe($('#cf__title').value),
+      safe($('#cf__publisher').value),
+      $('#cf__in_stock').checked,
+      safe($('#cf__category').value),
+      safe($('#cf__ordering').value),
+    ];
+
+    fetch(`/catalog/api/get-catalog?title=${encodeURIComponent(fTitle)}&publisher=${encodeURIComponent(fPublisher)}&in_stock=${encodeURIComponent(fInStock)}&category=${encodeURIComponent(fCategory)}&ordering=${encodeURIComponent(fOrdering)}`)
+      .then(res => res.json())
+      .then(items => {
+        const itemsSet = $('#is__items-set');
+        itemsSet.innerHTML = '';
+        items.forEach(item => {
+          let {
+            id,
+            title,
+            price,
+            image,
+            is_in_stock,
+            is_available,
+            is_in_cart,
+            is_in_favs
+          } = item;
+          id = +id;
+          title = safe(title);
+          price = +price;
+          image = safe(image);
+          is_in_stock = !!is_in_stock;
+          is_in_cart = !!is_in_cart;
+          is_in_favs = !!is_in_favs;
+          itemsSet.innerHTML += `
+              <div id="item-${id}" class="item-block" onclick="itemBlockOnClick(event, ${id})">
+                  <img src="${image}" class="item-image"/>
+                  <p class="item-title">${title}</p>
+                  <p class="item-price">${price.toFixed(2)} Br</p>
+                  <div class="item-btns">
+                    <% if (isAdmin) { %>
+                    <button class="item-button item-update" style="background-image: url('/images/interface/update_item_btn.png')"></button>
+                    <% } else if (isClient) { %>
+                    <button class="item-button item-tgl-in-favs"></button>
+                    <button class="item-button item-tgl-in-cart"></button>
+                    <% } %>
+                  </div>
+              </div>
+              `;
+          <% if (isClient) { %>
+          $(`#item-${id} .item-tgl-in-favs`).style.backgroundImage =
+            `url('${getInFavsToggleBtnImg(is_in_favs)}')`;
+          let tglInCartBtn = $(`#item-${id} .item-tgl-in-cart`);
+          tglInCartBtn.style.backgroundImage =
+            `url(${getInCartToggleBtnImg(is_in_cart)}`;
+          tglInCartBtn.disabled = !is_in_cart && (!is_available || !is_in_stock);
+          <% } %>
+          if (!is_available) {
+            $(`#item-${id}`).innerHTML += '<p class="item-not-available">Недаступна</p>';
+          } else if (!is_in_stock) {
+            $(`#item-${id}`).innerHTML += '<p class="item-not-in-stock">Няма ў наяўнасці</p>';
+          }
+        });
+      });
+  }
+
+  function itemBlockOnClick(e, id) {
+    id = +id;
+    <% if (isAdmin) { %>
+    if (e.target === $(`#item-${id} .item-update`)) {
+      window.location.href = `/update-item/${id}`;
+      return;
+    }
+    <% } else if (isClient) { %>
+    if (e.target === $(`#item-${id} .item-tgl-in-favs`)) {
+      toggleItemInFavs(id);
+      return;
+    } else if (e.target === $(`#item-${id} .item-tgl-in-cart`)) {
+      toggleItemInCart(id);;
+      return;
+    }
+    <% } %>
+    window.location.href = `/item/${id}`;
+  }
+
+  function toggleItemInFavs(id) {
+    id = +id;
+    fetch(`/catalog/api/toggle-in-favs/${id}`, {
+        method: 'POST'
+      })
+      .then(res => res.json())
+      .then(json => {
+        $(`#item-${id} .item-tgl-in-favs`).style.backgroundImage =
+          `url(${getInFavsToggleBtnImg(json.is_in_favs)})`;
+      });
+  }
+
+  function getInFavsToggleBtnImg(is_in_favs) {
+    return is_in_favs ? '/images/interface/rem_from_favs_btn.png' : '/images/interface/add_to_favs_btn.png'
+  }
+
+  function toggleItemInCart(id) {
+    id = +id;
+    fetch(`/catalog/api/toggle-in-cart/${id}`, {
+        method: 'POST'
+      })
+      .then(res => res.json())
+      .then(json => {
+        $(`#item-${id} .item-tgl-in-cart`).style.backgroundImage =
+          `url(${getInCartToggleBtnImg(json.is_in_cart)})`;
+      });
+  }
+
+  function getInCartToggleBtnImg(is_in_cart) {
+    return is_in_cart ? '/images/interface/rem_from_cart_btn.png' : '/images/interface/add_to_cart_btn.png'
+  }
+</script>

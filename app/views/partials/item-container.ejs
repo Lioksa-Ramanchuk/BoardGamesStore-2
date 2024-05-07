@@ -1,0 +1,123 @@
+<div class="item-container">
+  <div class="item-main">
+    <div class="item-image-wrapper">
+      <img id="item-image" />
+    </div>
+    <div id="item-info" class="item-info">
+      <h1 id="item-title" class="item-title"></h1>
+      <table class="item-details">
+        <tr>
+          <td>Катэгорыя</td>
+          <td id="item-category"></td>
+        </tr>
+        <tr>
+          <td>Выдавецтва</td>
+          <td id="item-publisher"></td>
+        </tr>
+        <tr>
+          <td>Год выдання</td>
+          <td id="item-year"></td>
+        </tr>
+        <tr>
+          <td>Колькасць гульцоў</td>
+          <td id="item-players"></td>
+        </tr>
+        <tr>
+          <td>Гульнявы час</td>
+          <td id="item-avg-play-time"></td>
+        </tr>
+        <tr>
+          <td>Узрост гульцоў</td>
+          <td id="item-player-min-age"></td>
+        </tr>
+      </table>
+      <p id="item-price" class="item-price"></p>
+      <div class="item-btns">
+        <% if (isAdmin) { %>
+        <button onclick="window.location.href=`/update-item/<%= item_id %>`" class="item-button" id="item-update" style="background-image: url('/images/interface/update_item_btn.png')"></button>
+        <% } else if (isClient) { %>
+        <button onclick="toggleItemInFavs(<%= item_id %>)" class="item-button" id="item-tgl-in-favs"></button>
+        <button onclick="toggleItemInCart(<%= item_id %>)" class="item-button" id="item-tgl-in-cart" disabled></button>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <div class="item-wide-block-wrapper">
+    <h2>Апісанне</h2>
+    <p id="item-description"></p>
+  </div>
+  <div class="item-wide-block-wrapper">
+    <h2>Правілы</h2>
+    <p id="item-rules"></p>
+  </div>
+</div>
+
+<script>
+  let itemInfo = {};
+
+  fetch(`/item/api/get-item-info/<%= item_id %>`)
+    .then(res => res.json())
+    .then(info => {
+      itemInfo = info;
+      $('#item-image').src = info.image;
+      $('#item-title').textContent = info.title;
+      $('#item-price').textContent = `${info.price.toFixed(2)} Br`;
+      $('#item-category').textContent = info.category;
+      $('#item-publisher').textContent = info.publisher;
+      $('#item-year').textContent = info.year;
+      $('#item-players').textContent = `${info.min_players}—${info.max_players}`;
+      $('#item-avg-play-time').textContent = `${info.avg_play_time} хв`;
+      $('#item-player-min-age').textContent = `${info.player_min_age}+`;
+      $('#item-description').textContent = info.description;
+      $('#item-rules').textContent = info.rules;
+      <% if (isClient) { %>
+      $('#item-tgl-in-favs').style.backgroundImage =
+        `url(${getInFavsToggleBtnImg(info.is_in_favs)}`;
+      let tglInCartBtn = $('#item-tgl-in-cart');
+      tglInCartBtn.style.backgroundImage =
+        `url(${getInCartToggleBtnImg(info.is_in_cart)}`;
+      tglInCartBtn.disabled = !info.is_in_cart && (!info.is_available || !info.quantity);
+      <% } %>
+      if (!info.is_available) {
+        $('#item-info').innerHTML += '<p class="item-not-available">Недаступна</p>';
+      } else if (!info.quantity) {
+        $('#item-info').innerHTML += '<p class="item-not-in-stock">Няма ў наяўнасці</p>';
+      }
+    });
+
+  function toggleItemInFavs(id) {
+    id = +id;
+    fetch(`/item/api/toggle-in-favs/${id}`, {
+        method: 'POST'
+      })
+      .then(res => res.json())
+      .then(json => {
+        itemInfo.is_in_favs = json.is_in_favs;
+        $(`#item-tgl-in-favs`).style.backgroundImage =
+          `url(${getInFavsToggleBtnImg(json.is_in_favs)})`;
+      });
+  }
+
+  function getInFavsToggleBtnImg(is_in_favs) {
+    return is_in_favs ? '/images/interface/rem_from_favs_btn.png' : '/images/interface/add_to_favs_btn.png'
+  }
+
+  function toggleItemInCart(id) {
+    id = +id;
+    fetch(`/item/api/toggle-in-cart/${id}`, {
+        method: 'POST'
+      })
+      .then(res => res.json())
+      .then(json => {
+        itemInfo.is_in_cart = json.is_in_cart;
+        let tglInCartBtn = $('#item-tgl-in-cart');
+        tglInCartBtn.style.backgroundImage =
+          `url(${getInCartToggleBtnImg(json.is_in_cart)})`;
+        tglInCartBtn.disabled = !json.is_in_cart && (!itemInfo.is_available || !itemInfo.quantity);
+      });
+  }
+
+  function getInCartToggleBtnImg(is_in_cart) {
+    return is_in_cart ? '/images/interface/rem_from_cart_btn.png' : '/images/interface/add_to_cart_btn.png'
+  }
+</script>

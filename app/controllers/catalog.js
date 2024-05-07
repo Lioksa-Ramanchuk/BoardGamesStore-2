@@ -27,11 +27,11 @@ export async function handleGetCatalog(req, res, next) {
 }
 
 export async function handleToggleFavouriteItem(req, res, next) {
-  const { is_in_favs } = await favouriteItemService.toggleByItemId(+req.params.id);
+  const { is_in_favs } = await favouriteItemService.toggleByItemId(+req.params.item_id);
   return res.json({ is_in_favs });
 }
 
 export async function handleToggleCartItem(req, res, next) {
-  const { is_in_favs } = await favouriteItemService.toggleByItemId(+req.params.id);
+  const { is_in_favs } = await favouriteItemService.toggleByItemId(+req.params.item_id);
   return res.json({ is_in_favs });
 }

@@ -42,6 +42,15 @@ const server = await (async () => {
   process.exit(1);
 });
 
+process.on('SIGINT', async () => {
+  await redisService.saveData();
+  process.exit(0);
+});
+process.on('SIGTERM', async () => {
+  await redisService.saveData();
+  process.exit(0);
+});
+
 app.use(redirectToHttps());
 app.use(cookieParser());
 app.set('view engine', 'ejs');

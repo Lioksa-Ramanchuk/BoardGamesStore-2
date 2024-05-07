@@ -1,8 +1,9 @@
 <%
 const menuItems = [
   { text: 'Каталог', href: '/catalog', condition: () => true },
+  { text: 'Тавар', href: `/item/${locals.item_id}`, condition: () => pageName === 'item' },
   { text: 'Дадаць тавар', href: '/add-item', condition: () => isAdmin },
-  { text: 'Змяніць тавар', href: '/update-item', condition: () => isAdmin && pageName === 'update-item' },
+  { text: 'Змяніць тавар', href: `/update-item/${locals.item_id}`, condition: () => isAdmin && pageName === 'update-item' },
   { text: 'Абранае', href: '/favs', condition: () => isClient },
   { text: 'Кошык', href: '/cart', condition: () => isClient },
   { text: 'Заказы', href: '/orders', condition: () => isAdmin || isClient },
@@ -21,5 +22,5 @@ const menuItems = [
 </nav>
 
 <script>
-  $(`.menu a[href="/<%= pageName %>"`).classList.add('active');
+  $(`.menu a[href^="/<%= pageName %>"`).classList.add('active');
 </script>

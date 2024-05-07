@@ -22,10 +22,10 @@ var globals = { pageName, isAdmin, isClient, isGuest };
 
   <%- include('./partials/header.ejs', { ...globals }) %>
   <div class="content">
-    <%- include('./partials/menu.ejs', { ...globals }) %>
+    <%- include('./partials/menu.ejs', { ...globals, item_id }) %>
     <main>
       <div class="forms-container">
-        <%- include('./partials/item-builder-forms.ejs', { ...globals }) %>
+        <%- include('./partials/item-builder-forms.ejs', { ...globals, item_id }) %>
       </div>
     </main>
   </div>
