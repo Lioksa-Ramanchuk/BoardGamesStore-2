@@ -4,7 +4,7 @@ const menuItems = [
   { text: 'Тавар', href: `/item/${locals.item_id}`, condition: () => pageName === 'item' },
   { text: 'Дадаць тавар', href: '/add-item', condition: () => isAdmin },
   { text: 'Змяніць тавар', href: `/update-item/${locals.item_id}`, condition: () => isAdmin && pageName === 'update-item' },
-  { text: 'Абранае', href: '/favs', condition: () => isClient },
+  { text: 'Абранае', href: '/favourites', condition: () => isClient },
   { text: 'Кошык', href: '/cart', condition: () => isClient },
   { text: 'Заказы', href: '/orders', condition: () => isAdmin || isClient },
   { text: 'Акаўнт', href: '/account', condition: () => true },

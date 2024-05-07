@@ -1,0 +1,124 @@
+<%
+var globals = { pageName, isAdmin, isClient, isGuest };
+%>
+<div class="buttons-row">
+  <button onclick="moveFavouritesToCart()">Перамясціць усё ў кошык</button>
+  <button onclick="clearFavourites()" class="cancel">Ачысціць абранае</button>
+</div>
+<%- include('./items-set.ejs', { ...globals }) %>
+
+<script>
+  updateFavourites();
+
+  function updateFavourites() {
+    fetch(`/favourites/api/get-favourite-items`)
+      .then(res => res.json())
+      .then(items => {
+        const itemsSet = $('#is__items-set');
+        itemsSet.innerHTML = '';
+        items.forEach(item => {
+          let {
+            id,
+            title,
+            price,
+            image,
+            is_in_stock,
+            is_available,
+            is_in_cart
+          } = item;
+          id = +id;
+          title = safe(title);
+          price = +price;
+          image = safe(image);
+          is_in_stock = !!is_in_stock;
+          is_available = !!is_available;
+          is_in_cart = !!is_in_cart;
+          itemsSet.innerHTML += `
+            <div id="item-${id}" class="item-block" onclick="itemBlockOnClick(event, ${id})">
+              <img src="${image}" class="item-image" />
+              <p class="item-title">${title}</p>
+              <p class="item-price">${price.toFixed(2)} Br</p>
+              <div class="item-btns">
+                <button class="item-button item-tgl-in-favs" style="background-image: url('/images/interface/rem_from_favs_btn.png');"></button>
+                <button class="item-button item-tgl-in-cart"></button>
+              </div>
+            </div>
+          `;
+          let tglInCartBtn = $(`#item-${id} .item-tgl-in-cart`);
+          tglInCartBtn.style.backgroundImage =
+            `url('${getInCartToggleBtnImg(is_in_cart)}')`;
+          tglInCartBtn.disabled = !is_in_cart && (!is_available || !is_in_stock);
+          if (!is_available) {
+            $(`#item-${id}`).innerHTML += '<p class="item-not-available">Недаступна</p>';
+          } else if (!is_in_stock) {
+            $(`#item-${id}`).innerHTML += '<p class="item-not-in-stock">Няма ў наяўнасці</p>';
+          }
+        });
+      });
+  }
+
+  function moveFavouritesToCart() {
+    fetch(`/favourites/api/move-favs-to-cart`, {
+        method: 'post'
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.text().then(errorMsg => alert(errorMsg));
+        }
+        updateFavourites();
+      });
+  }
+
+  function clearFavourites() {
+    fetch(`/favourites/api/clear-favourites`, {
+        method: 'post'
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.text().then(errorMsg => alert(errorMsg));
+        }
+        updateFavourites();
+      });
+  }
+
+  function itemBlockOnClick(e, id) {
+    id = +id;
+    if (e.target === $(`#item-${id} .item-tgl-in-favs`)) {
+      toggleItemInFavs(id);
+      return;
+    } else if (e.target === $(`#item-${id} .item-tgl-in-cart`)) {
+      toggleItemInCart(id);
+      return;
+    }
+    window.location.href = `/item/${id}`;
+  }
+
+  function toggleItemInFavs(id) {
+    id = +id;
+    fetch(`/favourites/api/toggle-in-favs/${id}`, {
+        method: 'post'
+      })
+      .then(res => res.json())
+      .then(json => {
+        if (!json.is_in_favs) {
+          $(`#item-${id}`).remove();
+        }
+      });
+  }
+
+  function getInCartToggleBtnImg(is_in_cart) {
+    return is_in_cart ? '/images/interface/rem_from_cart_btn.png' : '/images/interface/add_to_cart_btn.png'
+  }
+
+  function toggleItemInCart(id) {
+    id = +id;
+    fetch(`/favourites/api/toggle-in-cart/${id}`, {
+        method: 'post'
+      })
+      .then(res => res.json())
+      .then(json => {
+        $(`#item-${id} .item-tgl-in-cart`).style.backgroundImage =
+          `url(${getInCartToggleBtnImg(json.is_in_cart)})`;
+      });
+  }
+</script>

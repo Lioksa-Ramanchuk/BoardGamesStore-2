@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { db } from '../database/db.js';
 
 export async function clearFavouriteItemsByAccountId(id) {
@@ -25,8 +26,45 @@ export async function getByItemIdAndAccountId(itemId, accountId) {
   return getFullById(favItem.id);
 }
 
+export async function getAllBriefByAccountId(accountId) {
+  const favItems = await db.favourite_items.findAll({
+    where: { account_id: accountId },
+    include: [{ model: db.items, as: 'item', required: true }]
+  });
+  const items = favItems.map(favItem => ({
+    id: favItem.item.id,
+    title: favItem.item.title,
+    price: favItem.item.price,
+    image: favItem.item.image,
+    is_in_stock: favItem.item.quantity > 0,
+    is_available: favItem.item.is_available,
+  }));
+  return items;
+}
+
 export async function deleteById(id) {
   return db.favourite_items.destroy({ where: { id: id } });
+}
+
+export async function deleteByAccountId(accountId) {
+  return db.favourite_items.destroy({ where: { account_id: accountId } });
+}
+
+export async function moveAllToCartByAccountId(accountId) {
+  const favItemsToMove = await db.favourite_items.findAll({
+    where: { account_id: accountId },
+    include: [{
+      model: db.items, as: 'item', required: true,
+      where: { is_available: true, quantity: { [Op.gt]: 0 } }
+    }]
+  });
+  await Promise.all(favItemsToMove.map(async favItem => {
+    await db.cart_items.findOrCreate({
+      where: { item_id: favItem.item.id, account_id: accountId },
+      defaults: { item_id: favItem.item.id, account_id: accountId, quantity: 1 }
+    });
+    await db.favourite_items.destroy({ where: { id: favItem.id } });
+  }));
 }
 
 export async function add(itemId, accountId) {

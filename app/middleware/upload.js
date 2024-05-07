@@ -13,8 +13,9 @@ const upload = multer({
   }),
   fileFilter: function (req, file, cb) {
     var ext = path.extname(file.originalname);
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.gif') {
-      return cb(new Error('Толькі выявы можна запампоўваць на сервер!'));
+    const allowedExts = ['.png', '.jpg', '.jpeg', '.gif'];
+    if (!allowedExts.includes(ext)) {
+      return cb(new Error(`Калі ласка, абярыце выяву памерам да 1МБ. Дазволеныя пашырэнні: ${allowedExts.join(', ')}`));
     }
     cb(null, true);
   },
