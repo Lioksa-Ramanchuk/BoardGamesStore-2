@@ -17,7 +17,7 @@ export async function create(login, password, fullname, email, roleTitle) {
   });
   if (!account) return null;
   await keyService.storeAccountKey(account.id, key);
-  return getFulById(account.id);
+  return getFullById(account.id);
 }
 
 export async function createAdmin(login, password, fullname, email) {
@@ -27,7 +27,7 @@ export async function createAdmin(login, password, fullname, email) {
 export async function getByLogin(login) {
   const account = await db.accounts.findOne({ where: { login: login } });
   if (!account) return null;
-  return getFulById(account.id);
+  return getFullById(account.id);
 }
 
 export async function verifyPassword(id, password) {
@@ -36,7 +36,7 @@ export async function verifyPassword(id, password) {
   return cryptoService.verifyHash(account.password, password);
 }
 
-export async function getFulById(id) {
+export async function getFullById(id) {
   const account = await db.accounts.findByPk(id, {
     include: [
       { model: db.roles, required: true, as: 'role' },
@@ -52,7 +52,7 @@ export async function activateById(id) {
   if (!account) return null;
   account.is_active = true;
   await account.save();
-  return getFulById(account.id);
+  return getFullById(account.id);
 }
 
 export async function deactivateById(id) {
@@ -68,7 +68,7 @@ export async function deactivateById(id) {
     await clearCartItemsByAccountId(account.id);
     await clearFavouriteItemsByAccountId(account.id);
   }
-  return getFulById(account.id);
+  return getFullById(account.id);
 }
 
 export async function updateById(id, login, password, fullname, email) {
@@ -80,7 +80,7 @@ export async function updateById(id, login, password, fullname, email) {
   account.fullname = fullname && cryptoService.encrypt(fullname, key) || account.fullname;
   account.email = email && cryptoService.encrypt(email, key) || account.email;
   account.save();
-  return getFulById(account.id);
+  return getFullById(account.id);
 }
 
 async function dataValues(account) {

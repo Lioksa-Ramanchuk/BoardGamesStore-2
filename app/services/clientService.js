@@ -12,7 +12,7 @@ export async function createClient(login, password, fullname, email, address) {
     account_id: account.id,
     address: cryptoService.encrypt(address, key),
   });
-  return accountService.getFulById(account.id);
+  return accountService.getFullById(account.id);
 }
 
 export async function updateByAccountId(accountId, address) {
@@ -21,5 +21,5 @@ export async function updateByAccountId(accountId, address) {
   const key = await keyService.getAccountKey(accountId);
   client.address = address && cryptoService.encrypt(address, key) || client.address;
   client.save();
-  return accountService.getFulById(accountId);
+  return accountService.getFullById(accountId);
 }

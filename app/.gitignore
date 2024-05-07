@@ -2,4 +2,4 @@
 private/
 *.rdb
 node_modules
-images/
+static/images/

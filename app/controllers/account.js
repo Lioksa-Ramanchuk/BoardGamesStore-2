@@ -7,7 +7,7 @@ import * as jwtService from '../services/jwtService.js';
 import { StatusCodes } from 'http-status-codes';
 
 export async function handleGetAccountInfo(req, res, next) {
-  const account = await accountService.getFulById(req.account.id);
+  const account = await accountService.getFullById(req.account.id);
   return res.json(account);
 }
 
