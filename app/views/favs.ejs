@@ -94,24 +94,24 @@
 
     function toggleItemInFavs(id) {
       fetch(`/api/toggle-in-favs/${id}`, {
-          method: 'POST'
+          method: 'post'
         })
         .then(() => $(`#item-${id}`).remove());
     }
 
     function toggleItemInCart(id) {
       fetch(`/api/toggle-in-cart/${id}`, {
-          method: 'POST'
+          method: 'post'
         })
         .then(res => res.json())
         .then(json => {
           $(`#item-${id} .item-tgl-in-cart`).style.backgroundImage =
-            `url(${getInCartToggleBtnImg(json.isInCart)})`;
+            `url(${getInCartToggleBtnImg(json.is_in_cart)})`;
         });
     }
 
-    function getInCartToggleBtnImg(isInCart) {
-      return isInCart ? '/images/interface/rem_from_cart_btn.png' : '/images/interface/add_to_cart_btn.png'
+    function getInCartToggleBtnImg(is_in_cart) {
+      return is_in_cart ? '/images/interface/rem_from_cart_btn.png' : '/images/interface/add_to_cart_btn.png'
     }
   </script>
 </body>

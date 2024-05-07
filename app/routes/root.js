@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import accountRouter from './account.js';
 import addItemRouter from './add-item.js';
+import cartRouter from './cart.js';
 import casl from 'casl';
 import catalogRouter from './catalog.js';
 import itemRouter from './item.js';
@@ -12,6 +13,7 @@ router.use('/catalog', catalogRouter);
 router.use('/item', itemRouter);
 router.use('/add-item', addItemRouter);
 router.use('/update-item', updateItemRouter);
+router.use('/cart', cartRouter);
 router.use('/account', accountRouter);
 
 router.get('/', (req, res) => res.redirect('/catalog'));

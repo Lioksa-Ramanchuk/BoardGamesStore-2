@@ -1,0 +1,15 @@
+<button onclick="tryOpenOrderingPage()">Аформіць заказ</button>
+
+<script>
+  function tryOpenOrderingPage() {
+    fetch(`/cart/api/validate-cart`, {
+        method: 'post'
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.text().then(errorMsg => alert(errorMsg));
+        }
+        window.location.href = `/ordering`;
+      });
+  }
+</script>

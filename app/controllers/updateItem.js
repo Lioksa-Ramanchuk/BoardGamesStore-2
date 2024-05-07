@@ -12,8 +12,3 @@ export async function handleUpdateItem(req, res, next) {
   }
   return res.status(StatusCodes.OK).send('Тавар паспяхова зменены!');
 }
-
-export async function handleGetItemInfo(req, res, next) {
-  const item = await itemService.getFullById(+req.params.item_id);
-  return res.json(item);
-}

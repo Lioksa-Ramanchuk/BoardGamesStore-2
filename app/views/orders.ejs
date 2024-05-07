@@ -176,7 +176,7 @@
     function updateOrderStatus(order_id) {
       let new_os_name = $(`#order-status`).value;
       fetch('/api/set-order-status', {
-        method: 'POST',
+        method: 'post',
         headers: {
           'Content-Type': 'application/json',
         },

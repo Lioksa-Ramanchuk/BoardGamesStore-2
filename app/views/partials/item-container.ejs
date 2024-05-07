@@ -88,7 +88,7 @@
   function toggleItemInFavs(id) {
     id = +id;
     fetch(`/item/api/toggle-in-favs/${id}`, {
-        method: 'POST'
+        method: 'post'
       })
       .then(res => res.json())
       .then(json => {
@@ -105,7 +105,7 @@
   function toggleItemInCart(id) {
     id = +id;
     fetch(`/item/api/toggle-in-cart/${id}`, {
-        method: 'POST'
+        method: 'post'
       })
       .then(res => res.json())
       .then(json => {

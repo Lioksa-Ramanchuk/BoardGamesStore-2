@@ -4,10 +4,10 @@ import { db } from '../database/db.js';
 export async function create(title, description, rules, price, quantity, category, image, publisher, year, min_players, max_players, avg_play_time, player_min_age, is_available) {
   const item = await db.items.create({ title, description, rules, price, quantity, category, image, publisher, year, min_players, max_players, avg_play_time, player_min_age, is_available });
   if (!item) return null;
-  return getFullById(item.id);
+  return getById(item.id);
 }
 
-export async function getFullById(id) {
+export async function getById(id) {
   const item = await db.items.findByPk(id);
   if (!item) return null;
   return {
@@ -84,5 +84,5 @@ export async function updateById(itemId, title, description, rules, price, quant
   )) {
     return null;
   }
-  return getFullById(itemId);
+  return getById(itemId);
 }

@@ -1,6 +1,7 @@
 import * as Action from '../security/action.js';
 import * as Subject from '../security/subject.js';
 import * as catalogController from '../controllers/catalog.js';
+import * as commonApiController from '../controllers/commonApi.js';
 
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -19,9 +20,9 @@ router.use('/api', apiRouter);
 apiRouter.get('/get-catalog',
   asyncHandler(catalogController.handleGetCatalog));
 apiRouter.post('/toggle-in-favs/:item_id', asyncHandler(paramsItemId),
-  asyncHandler(catalogController.handleToggleFavouriteItem));
+  asyncHandler(commonApiController.handleToggleFavouriteItem));
 apiRouter.post('/toggle-in-cart/:item_id', asyncHandler(paramsItemId),
-  asyncHandler(catalogController.handleToggleCartItem));
+  asyncHandler(commonApiController.handleToggleCartItem));
 
 apiRouter.use((err, req, res, next) => {
   console.error(err);

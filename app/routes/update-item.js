@@ -1,5 +1,6 @@
 import * as Action from '../security/action.js';
 import * as Subject from '../security/subject.js';
+import * as commonApiController from '../controllers/commonApi.js';
 import * as updateItemController from '../controllers/updateItem.js';
 
 import { Router } from 'express';
@@ -17,7 +18,7 @@ const apiRouter = new Router({ mergeParams: true });
 router.use('/api', apiRouter);
 
 apiRouter.get('/get-item-info/:item_id', asyncHandler(paramsItemId),
-  asyncHandler(updateItemController.handleGetItemInfo));
+  asyncHandler(commonApiController.handleGetItemInfo));
 apiRouter.post('/update-item/:item_id', asyncHandler(paramsItemId),
   upload.single('image'), asyncHandler(updateItemController.handleUpdateItem));
 

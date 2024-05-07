@@ -9,12 +9,12 @@ export async function isInFavouritesOfAccount(itemId, accountId) {
 }
 
 export async function toggle(itemId, accountId) {
-  const favItem = getByItemIdAndAccountId(itemId, accountId);
+  const favItem = await getByItemIdAndAccountId(itemId, accountId);
   let is_in_favs;
   if (favItem) {
     is_in_favs = !await deleteById(favItem.id);
   } else {
-    is_in_favs = !!add(itemId, accountId);
+    is_in_favs = !!await add(itemId, accountId);
   }
   return { is_in_favs };
 }
@@ -30,7 +30,7 @@ export async function deleteById(id) {
 }
 
 export async function add(itemId, accountId) {
-  const favItem = await db.favourite_items.findOrCreate({
+  const [favItem, created] = await db.favourite_items.findOrCreate({
     where: { item_id: itemId, account_id: accountId },
     defaults: { item_id: itemId, account_id: accountId }
   });
@@ -38,7 +38,7 @@ export async function add(itemId, accountId) {
   return getFullById(favItem.id);
 }
 
-async function getFullById(id) {
+export async function getFullById(id) {
   const favItem = await db.favourite_items.findByPk(id);
   return dataValues(favItem);
 }

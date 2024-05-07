@@ -1,5 +1,6 @@
 import * as Action from '../security/action.js';
 import * as Subject from '../security/subject.js';
+import * as cartController from '../controllers/cart.js';
 import * as commonApiController from '../controllers/commonApi.js';
 
 import { Router } from 'express';
@@ -10,14 +11,22 @@ import upload from '../middleware/upload.js';
 
 const router = new Router({ mergeParams: true });
 
-router.get('/:item_id', asyncHandler(paramsItemId),
-  asyncHandler(async (req, res) => res.render('item', { account: req.account, item_id: +req.params.item_id })));
+router.get('/',
+  asyncHandler(async (req, res) => res.render('cart', { account: req.account })));
 
 const apiRouter = new Router({ mergeParams: true });
 router.use('/api', apiRouter);
 
-apiRouter.get('/get-item-info/:item_id', asyncHandler(paramsItemId),
-  asyncHandler(commonApiController.handleGetItemInfo));
+apiRouter.get('/get-cart-items',
+  asyncHandler(cartController.handleGetCartItems));
+apiRouter.get('/get-cart-cost',
+  asyncHandler(cartController.handleGetCartCost));
+apiRouter.post('/validate-cart',
+  asyncHandler(cartController.handleValidateCart));
+apiRouter.post('/clear-cart',
+  asyncHandler(cartController.handleClearCart));
+apiRouter.post('/update-cart-item-quantity',
+  asyncHandler(cartController.handleUpdateCartItemQuantity));
 apiRouter.post('/toggle-in-favs/:item_id', asyncHandler(paramsItemId),
   asyncHandler(commonApiController.handleToggleFavouriteItem));
 apiRouter.post('/toggle-in-cart/:item_id', asyncHandler(paramsItemId),
