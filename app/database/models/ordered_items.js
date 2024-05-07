@@ -41,7 +41,7 @@ export default class ordered_items extends Model {
     timestamps: false,
     indexes: [
       {
-        name: "PK__ordered___3213E83F6400D938",
+        name: "PK__ordered___3213E83F7D5D1D37",
         unique: true,
         fields: [
           { name: "id" },

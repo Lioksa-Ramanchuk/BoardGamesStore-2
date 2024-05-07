@@ -1,0 +1,130 @@
+<form class="item-image-wrapper">
+  <img id="ibf__image" src="/images/uploaded/default.png" />
+</form>
+<form id="ibf__item-builder-form" class="item-builder" autocomplete="off">
+  <div class="form-field">
+    <label for="ibf__title">Назва тавара</label>
+    <input type="text" id="ibf__title" name="title" placeholder="Назва тавара" required maxlength="255" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__price">Цана (Br)</label>
+    <input type="number" id="ibf__price" name="price" placeholder="Цана" required min="0" max="9999999.99" step="0.01" value="0" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__quantity">Колькасць</label>
+    <input type="number" id="ibf__quantity" name="quantity" placeholder="Колькасць" required min="0" max="9999999" step="1" value="0" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__image-path">Выява</label>
+    <input type="file" id="ibf__image-path" name="image" accept="image/*" placeholder="Шлях да выявы" onchange="updateImage(event)" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__description">Апісанне</label>
+    <textarea id="ibf__description" name="description" placeholder="Апісанне тавара" maxlength="10000"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="ibf__rules">Правілы гульні</label>
+    <textarea id="ibf__rules" name="rules" placeholder="Правілы гульні" maxlength="10000"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="ibf__category">Катэгорыя</label>
+    <input type="text" id="ibf__category" name="category" placeholder="Катэгорыя" maxlength="255" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__publisher">Выдавецтва</label>
+    <input type="text" id="ibf__publisher" name="publisher" placeholder="Выдавецтва" required maxlength="255" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__year">Год выдання</label>
+    <input type="number" id="ibf__year" name="year" placeholder="Год выдання" required min="0" max="3000" step="1" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__min-players">Мінімальная колькасць гульцоў</label>
+    <input type="number" id="ibf__min-players" name="min_players" placeholder="Мінімальная колькасць гульцоў" required min="1" max="1000" step="1" value="1" onchange="document.querySelector('#ibf__max-players').min = this.value;" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__max-players">Максімальная колькасць гульцоў</label>
+    <input type="number" id="ibf__max-players" name="max_players" placeholder="Максімальная колькасць гульцоў" required min="document.querySelector('#ibf__min-players').value" max="1000" step="1" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__avg-play-time">Гульнявы час (у хвілінах)</label>
+    <input type="number" id="ibf__avg-play-time" name="avg_play_time" placeholder="Гульнявы час" required min="0" max="3000" step="1" />
+  </div>
+  <div class="form-field">
+    <label for="ibf__player-min-age">Мінімальны ўзрост гульцоў</label>
+    <input type="number" id="ibf__player-min-age" name="player_min_age" placeholder="Мінімальны ўзрост гульцоў" required min="0" max="150" step="1" value="0" />
+  </div>
+  <div class="form-field form-field-horizontal">
+    <input type="checkbox" id="ibf__is-available" name="is_available" />
+    <label for="ibf__is-available">Тавар даступны</label>
+  </div>
+  <% if (pageName === 'add-item') { %>
+  <button type="submit">Дадаць тавар у каталог</button>
+  <% } %>
+  <% if (pageName === 'update-item') { %>
+  <button type="submit">Змяніць звесткі тавара</button>
+  <% } %>
+</form>
+
+<script>
+  function updateImage(event) {
+    $(`#ibf__image`).src = URL.createObjectURL(event.target.files[0]);
+  }
+
+  <% if (pageName === 'add-item') { %>
+  $('#ibf__year').value = new Date().getFullYear();
+
+  $('#ibf__item-builder-form').onsubmit = async function(event) {
+    event.preventDefault();
+    fetch('/add-item/api/add-item', {
+      method: 'post',
+      body: new FormData(this),
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      return res.text().then(msg => {
+        alert(msg);
+        document.location.href = '/add-item';
+      });
+    });
+  }
+  <% } %>
+
+  <% if (pageName === 'update-item') { %>
+  fetch(`/update-item/api/get-item-info/<%= item_id %>`)
+    .then(res => res.json())
+    .then(info => {
+      $('#ibf__image').src = info.image;
+      $('#ibf__title').value = info.title;
+      $('#ibf__price').value = info.price;
+      $('#ibf__quantity').value = info.quantity;
+      $('#ibf__description').value = info.description;
+      $('#ibf__rules').value = info.rules;
+      $('#ibf__category').value = info.category;
+      $('#ibf__publisher').value = info.publisher;
+      $('#ibf__year').value = info.year;
+      $('#ibf__min-players').value = info.min_players;
+      $('#ibf__max-players').value = info.max_players;
+      $('#ibf__avg-play-time').value = info.avg_play_time;
+      $('#ibf__player-min-age').value = info.player_min_age;
+      $('#ibf__is-available').checked = info.is_available;
+    });
+
+  $('#ibf__item-builder-form').onsubmit = async function(event) {
+    event.preventDefault();
+    fetch(`/update-item/api/update-item/<%= item_id %>`, {
+      method: 'post',
+      body: new FormData(this),
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      return res.text().then(msg => {
+        alert(msg);
+        document.location.href = '/update-item/<%= item_id %>';
+      });
+    });
+  }
+  <% } %>
+</script>

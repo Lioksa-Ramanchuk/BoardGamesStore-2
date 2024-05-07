@@ -7,7 +7,7 @@ import * as jwtService from '../services/jwtService.js';
 import { StatusCodes } from 'http-status-codes';
 
 export async function handleGetAccountInfo(req, res, next) {
-  const account = await accountService.getById(req.account.id);
+  const account = await accountService.getFulById(req.account.id);
   return res.json(account);
 }
 
@@ -19,7 +19,7 @@ export async function handleSignIn(req, res, next) {
     return res.status(StatusCodes.UNPROCESSABLE_ENTITY).send('Няправільны лагін ці пароль!');
   }
   if (!account.is_active) {
-    return res.status(StatusCodes.ACCEPTED).send('Рэактывіяваць акаўнт?');
+    return res.status(StatusCodes.ACCEPTED).send('Аднавіць акаўнт?');
   }
   const accountUuid = cryptoService.generateUuid();
   const accessToken = jwtService.generateAccessToken(account.id, account.role.title, accountUuid);
@@ -27,7 +27,7 @@ export async function handleSignIn(req, res, next) {
   await jwtService.storeRefreshToken(accountUuid, refreshToken);
   cookieService.setAccessToken(res, accessToken);
   cookieService.setRefreshToken(res, refreshToken);
-  return res.sendStatus(StatusCodes.OK);
+  return res.status(StatusCodes.OK).end('Уваход у акаўнт выкананы паспяхова.');
 }
 
 export async function handleSignUp(req, res, next) {
@@ -43,25 +43,25 @@ export async function handleSignUp(req, res, next) {
   await jwtService.storeRefreshToken(accountUuid, refreshToken);
   cookieService.setAccessToken(res, accessToken);
   cookieService.setRefreshToken(res, refreshToken);
-  return res.sendStatus(StatusCodes.OK);
+  return res.status(StatusCodes.OK).send('Рэгістрацыя выкананая паспяхова.');
 }
 
 export function handleSignOut(req, res, next) {
   cookieService.clearAccessToken(res);
   cookieService.clearRefreshToken(res);
-  return res.sendStatus(StatusCodes.OK);
+  return res.status(StatusCodes.OK).send('Выхад з акаўнта выкананы паспяхова.');
 }
 
 export async function handleUpdateAccountInfo(req, res, next) {
   const { login, password, fullname, email } = req.body;
   await accountService.updateById(req.account.id, login, password, fullname, email);
-  return res.sendStatus(StatusCodes.OK);
+  return res.status(StatusCodes.OK).send('Звесткі акаўнта абноўленыя паспяхова.');
 }
 
 export async function handleUpdateClientAccountInfo(req, res, next) {
   const { address } = req.body;
   await clientService.updateByAccountId(req.account.id, address);
-  return res.sendStatus(StatusCodes.OK);
+  return res.status(StatusCodes.OK).send('Кліенцкія звесткі абноўленыя паспяхова.');
 }
 export async function handleCreateNewAdminAccount(req, res, next) {
   const { login, password, fullname, email } = req.body;
@@ -69,8 +69,8 @@ export async function handleCreateNewAdminAccount(req, res, next) {
   if (await accountService.getByLogin(login)) {
     return res.status(StatusCodes.CONFLICT).send('Такі лагін ужо ёсць!');
   }
-  await accountService.createAdmin(login, password, fullname, email);
-  return res.sendStatus(StatusCodes.OK);
+  const admin = await accountService.createAdmin(login, password, fullname, email);
+  return res.status(StatusCodes.OK).send(`Новы адміністратар ${admin.fullname} дададзены паспяхова.`);
 }
 
 export async function handleDeactivateAccount(req, res, next) {
@@ -78,7 +78,7 @@ export async function handleDeactivateAccount(req, res, next) {
   //return res.redirect('/account/api/sign-out', StatusCodes.TEMPORARY_REDIRECT);
   cookieService.clearAccessToken(res);
   cookieService.clearRefreshToken(res);
-  return res.sendStatus(StatusCodes.OK);
+  return res.status(StatusCodes.OK).send('Акаўнт дэактывіяваны паспяхова.');
 }
 
 export async function handleReactivateAccount(req, res, next) {
@@ -98,5 +98,5 @@ export async function handleReactivateAccount(req, res, next) {
   await jwtService.storeRefreshToken(accountUuid, refreshToken);
   cookieService.setAccessToken(res, accessToken);
   cookieService.setRefreshToken(res, refreshToken);
-  return res.sendStatus(StatusCodes.OK);
+  return res.status(StatusCodes.OK).send('Акаўнт адноўлены паспяхова.');
 }

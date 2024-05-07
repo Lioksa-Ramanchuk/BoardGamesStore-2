@@ -12,14 +12,14 @@ export async function createClient(login, password, fullname, email, address) {
     account_id: account.id,
     address: cryptoService.encrypt(address, key),
   });
-  return accountService.getById(account.id);
+  return accountService.getFulById(account.id);
 }
 
 export async function updateByAccountId(accountId, address) {
-  const client = await db.clients.findOne({ where: { account_id: id } });
+  const client = await db.clients.findOne({ where: { account_id: accountId } });
   if (!client) return null;
-  const key = await keyService.getAccountKey(id);
+  const key = await keyService.getAccountKey(accountId);
   client.address = address && cryptoService.encrypt(address, key) || client.address;
   client.save();
-  return accountService.getById(accountId);
+  return accountService.getFulById(accountId);
 }

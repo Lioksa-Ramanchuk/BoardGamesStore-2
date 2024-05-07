@@ -29,10 +29,24 @@
   color: #4c3369;
 }
 
-.form-field input {
+.form-field input,
+.form-field textarea {
   padding: 7px 10px;
   border: 2px solid #ccb5ee;
   border-radius: 10px;
+}
+
+.form-field input[type="text"],
+.form-field input[type="number"],
+.form-field input[type="file"],
+.form-field input[type="email"],
+.form-field input[type="password"],
+.form-field textarea {
+  width: 300px;
+}
+
+.form-field textarea {
+  resize: vertical;
 }
 
 .form-field-horizontal {

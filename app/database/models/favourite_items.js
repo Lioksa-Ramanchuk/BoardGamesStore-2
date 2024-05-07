@@ -33,7 +33,7 @@ export default class favourite_items extends Model {
     timestamps: false,
     indexes: [
       {
-        name: "PK__favourit__3213E83FFCBEF5A4",
+        name: "PK__favourit__3213E83FAED45342",
         unique: true,
         fields: [
           { name: "id" },

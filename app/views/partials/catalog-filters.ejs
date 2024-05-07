@@ -1,0 +1,26 @@
+<form id="cf__catalog-filters" class="set-filters">
+  <div class="set-filter">
+    <label for="cf__title">Назва тавара</label>
+    <input type="text" id="cf__title" placeholder="Назва тавара" />
+  </div>
+  <div class="set-filter">
+    <label for="cf__publisher">Назва выдавецтва</label>
+    <input type="text" id="cf__publisher" placeholder="Назва выдавецтва" />
+  </div>
+  <div class="set-filter">
+    <label for="cf__category">Катэгорыя</label>
+    <input type="text" id="cf__category" placeholder="Катэгорыя" />
+  </div>
+  <div class="set-filter set-filter-horizontal">
+    <input type="checkbox" id="cf__in_stock" />
+    <label for="cf__in_stock">Толькі ў наяўнасці</label>
+  </div>
+  <div class="set-filter set-filter-horizontal">
+    <label for="cf__ordering">Спачатку</label>
+    <select id="cf__ordering">
+      <option value="<%= process.env.DATABASE_CATALOG_ITEMS_ORDERING_LAST_ADDED_TITLE %>" selected>новыя</option>
+      <option value="<%= process.env.DATABASE_CATALOG_ITEMS_ORDERING_PRICE_ASC_TITLE %>">танныя</option>
+      <option value="<%= process.env.DATABASE_CATALOG_ITEMS_ORDERING_PRICE_DESC_TITLE %>">дарагія</option>
+    </select>
+  </div>
+</form>

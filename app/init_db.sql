@@ -6,15 +6,6 @@ use BGSTORE;
 -- drop table clients;
 -- drop table accounts;
 -- drop table items;
--- drop table categories;
-
-go
-create table categories
-(
-  id int identity(1,1) not null primary key,
-  title nvarchar(255) not null,
-  parent_id int,
-);
 go
 create table items
 (
@@ -24,14 +15,14 @@ create table items
   rules nvarchar(MAX) not null,
   price money check (price >= 0) not null,
   quantity int check (quantity >= 0) not null,
-  category_id int foreign key references categories(id) on delete cascade,
+  category nvarchar(255) not null,
   image nvarchar(MAX) not null,
   publisher nvarchar(255) not null,
   year int check (year >= 0) not null,
-  min_players int check (min_players >= 0) not null,
-  max_players int check (max_players >= 0) not null,
+  min_players int check (min_players >= 1) not null,
+  max_players int check (max_players >= 1) not null,
   avg_play_time int check (avg_play_time >= 0) not null,
-  player_min_age int check (player_min_age >= 0) not null default 0,
+  player_min_age int check (player_min_age >= 0) not null,
   is_available bit not null default 1,
   constraint chk_players_range check (max_players >= min_players)
 );

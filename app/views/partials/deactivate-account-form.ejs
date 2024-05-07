@@ -13,6 +13,7 @@
         if (!res.ok) {
           return res.text().then(errorMsg => alert(errorMsg));
         }
+        res.text().then(msg => alert(msg));
         document.location.href = `/<%= pageName %>`;
       });
     }

@@ -30,13 +30,9 @@ export default class items extends Model {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    category_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'categories',
-        key: 'id'
-      }
+    category: {
+      type: DataTypes.STRING(255),
+      allowNull: false
     },
     image: {
       type: DataTypes.TEXT,
@@ -64,8 +60,7 @@ export default class items extends Model {
     },
     player_min_age: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0
+      allowNull: false
     },
     is_available: {
       type: DataTypes.BOOLEAN,
@@ -79,7 +74,7 @@ export default class items extends Model {
     timestamps: false,
     indexes: [
       {
-        name: "PK__items__3213E83F85B79754",
+        name: "PK__items__3213E83FFDBF6085",
         unique: true,
         fields: [
           { name: "id" },

@@ -2,10 +2,9 @@ import * as Role from '../security/role.js';
 import * as cryptoService from './cryptoService.js';
 import * as keyService from './keyService.js';
 
-import { clearCartItemsByAccountId } from './cartItemsService.js';
-import { clearFavouriteItemsByAccountId } from './favouriteItemsService.js';
+import { clearCartItemsByAccountId } from './cartItemService.js';
+import { clearFavouriteItemsByAccountId } from './favouriteItemService.js';
 import { db } from '../database/db.js';
-import e from 'express';
 
 export async function create(login, password, fullname, email, roleTitle) {
   const key = keyService.generateAccountKey();
@@ -18,7 +17,7 @@ export async function create(login, password, fullname, email, roleTitle) {
   });
   if (!account) return null;
   await keyService.storeAccountKey(account.id, key);
-  return getById(account.id);
+  return getFulById(account.id);
 }
 
 export async function createAdmin(login, password, fullname, email) {
@@ -28,7 +27,7 @@ export async function createAdmin(login, password, fullname, email) {
 export async function getByLogin(login) {
   const account = await db.accounts.findOne({ where: { login: login } });
   if (!account) return null;
-  return getById(account.id);
+  return getFulById(account.id);
 }
 
 export async function verifyPassword(id, password) {
@@ -37,7 +36,7 @@ export async function verifyPassword(id, password) {
   return cryptoService.verifyHash(account.password, password);
 }
 
-export async function getById(id) {
+export async function getFulById(id) {
   const account = await db.accounts.findByPk(id, {
     include: [
       { model: db.roles, required: true, as: 'role' },
@@ -45,14 +44,7 @@ export async function getById(id) {
     ]
   });
   if (!account) return null;
-  delete account.save;
-  const key = await keyService.getAccountKey(account.id);
-  account.fullname = cryptoService.decrypt(account.fullname, key);
-  account.email = cryptoService.decrypt(account.email, key);
-  if (account.client) {
-    account.client.address = cryptoService.decrypt(account.client.address, key);
-  }
-  return account;
+  return dataValues(account);
 }
 
 export async function activateById(id) {
@@ -60,7 +52,7 @@ export async function activateById(id) {
   if (!account) return null;
   account.is_active = true;
   await account.save();
-  return getById(id);
+  return getFulById(account.id);
 }
 
 export async function deactivateById(id) {
@@ -76,7 +68,7 @@ export async function deactivateById(id) {
     await clearCartItemsByAccountId(account.id);
     await clearFavouriteItemsByAccountId(account.id);
   }
-  return getById(id);
+  return getFulById(account.id);
 }
 
 export async function updateById(id, login, password, fullname, email) {
@@ -88,5 +80,19 @@ export async function updateById(id, login, password, fullname, email) {
   account.fullname = fullname && cryptoService.encrypt(fullname, key) || account.fullname;
   account.email = email && cryptoService.encrypt(email, key) || account.email;
   account.save();
-  return getById(id);
+  return getFulById(account.id);
+}
+
+async function dataValues(account) {
+  const key = await keyService.getAccountKey(account.id);
+  return {
+    id: account.id,
+    role_id: account.role_id,
+    role: account.role && { id: account.role.id, title: account.role.title },
+    login: account.login,
+    fullname: cryptoService.decrypt(account.fullname, key),
+    email: cryptoService.decrypt(account.email, key),
+    is_active: account.is_active,
+    client: account.client && { address: cryptoService.decrypt(account.client.address, key) } || null,
+  };
 }

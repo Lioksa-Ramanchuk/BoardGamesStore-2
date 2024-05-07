@@ -38,7 +38,7 @@ export default class cart_items extends Model {
     timestamps: false,
     indexes: [
       {
-        name: "PK__cart_ite__3213E83F9F4562EC",
+        name: "PK__cart_ite__3213E83F1E2F6C56",
         unique: true,
         fields: [
           { name: "id" },

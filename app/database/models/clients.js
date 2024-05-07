@@ -17,7 +17,7 @@ export default class clients extends Model {
         model: 'accounts',
         key: 'id'
       },
-      unique: "UQ__clients__46A222CC094CD4F6"
+      unique: "UQ__clients__46A222CC6F2F2EA9"
     },
     address: {
       type: DataTypes.TEXT,
@@ -30,14 +30,14 @@ export default class clients extends Model {
     timestamps: false,
     indexes: [
       {
-        name: "PK__clients__3213E83FF52591F9",
+        name: "PK__clients__3213E83F748B831D",
         unique: true,
         fields: [
           { name: "id" },
         ]
       },
       {
-        name: "UQ__clients__46A222CC094CD4F6",
+        name: "UQ__clients__46A222CC6F2F2EA9",
         unique: true,
         fields: [
           { name: "account_id" },

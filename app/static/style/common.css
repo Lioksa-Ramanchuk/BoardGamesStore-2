@@ -88,12 +88,6 @@ select {
   padding: 3px 10px;
 }
 
-input[type='text'],
-input[type='email'],
-input[type='password'] {
-  width: 300px;
-}
-
 button {
   display: inline-block;
   padding: 8px 15px;

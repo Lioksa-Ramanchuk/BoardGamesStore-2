@@ -1,7 +1,6 @@
 import * as Action from '../security/action.js';
 import * as Subject from '../security/subject.js';
-
-import { handleCreateNewAdminAccount, handleDeactivateAccount, handleGetAccountInfo, handleReactivateAccount, handleSignIn, handleSignOut, handleSignUp, handleUpdateAccountInfo, handleUpdateClientAccountInfo } from '../controllers/account.js';
+import * as accountController from '../controllers/account.js';
 
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -18,23 +17,23 @@ const apiRouter = new Router({ mergeParams: true });
 router.use('/api', apiRouter);
 
 apiRouter.get('/get-account-info',
-  asyncHandler(handleGetAccountInfo));
+  asyncHandler(accountController.handleGetAccountInfo));
 apiRouter.post('/sign-up', //asyncHandler(checkAbility(Action.SignUp, new Subject.ClientAccount())),
-  upload.none(), asyncHandler(handleSignUp));
+  upload.none(), asyncHandler(accountController.handleSignUp));
 apiRouter.post('/sign-in', //asyncHandler(checkAbility(Action.SignIn, new Subject.Account())),
-  upload.none(), asyncHandler(handleSignIn));
+  upload.none(), asyncHandler(accountController.handleSignIn));
 apiRouter.post('/update-account-info',
-  upload.none(), asyncHandler(handleUpdateAccountInfo));
+  upload.none(), asyncHandler(accountController.handleUpdateAccountInfo));
 apiRouter.post('/update-client-account-info',
-  upload.none(), asyncHandler(handleUpdateClientAccountInfo));
+  upload.none(), asyncHandler(accountController.handleUpdateClientAccountInfo));
 apiRouter.post('/create-new-admin-account',
-  upload.none(), asyncHandler(handleCreateNewAdminAccount));
+  upload.none(), asyncHandler(accountController.handleCreateNewAdminAccount));
 apiRouter.post('/sign-out',
-  asyncHandler(handleSignOut));
+  asyncHandler(accountController.handleSignOut));
 apiRouter.post('/deactivate-account',
-  asyncHandler(handleDeactivateAccount));
+  asyncHandler(accountController.handleDeactivateAccount));
 apiRouter.post('/reactivate-account',
-  upload.none(), asyncHandler(handleReactivateAccount));
+  upload.none(), asyncHandler(accountController.handleReactivateAccount));
 
 apiRouter.use((err, req, res, next) => {
   console.error(err);

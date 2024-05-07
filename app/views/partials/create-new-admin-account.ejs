@@ -29,7 +29,7 @@
       if (!res.ok) {
         return res.text().then(errorMsg => alert(errorMsg));
       }
-      document.location.href = `/<%= pageName %>`;
+      return res.text().then(msg => alert(msg));
     });
   }
 </script>

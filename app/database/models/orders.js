@@ -21,7 +21,7 @@ export default class orders extends Model {
     code: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: "UQ__orders__357D4CF97BFAB6FC"
+      unique: "UQ__orders__357D4CF976BD4BCB"
     },
     order_date: {
       type: DataTypes.DATE,
@@ -59,14 +59,14 @@ export default class orders extends Model {
     timestamps: false,
     indexes: [
       {
-        name: "PK__orders__3213E83F0B066E9D",
+        name: "PK__orders__3213E83F5F082ED2",
         unique: true,
         fields: [
           { name: "id" },
         ]
       },
       {
-        name: "UQ__orders__357D4CF97BFAB6FC",
+        name: "UQ__orders__357D4CF976BD4BCB",
         unique: true,
         fields: [
           { name: "code" },

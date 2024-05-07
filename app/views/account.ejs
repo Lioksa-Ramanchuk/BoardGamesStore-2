@@ -48,17 +48,6 @@ var globals = { pageName, isAdmin, isClient, isGuest };
     </main>
   </div>
   <%- include('./partials/footer.ejs', { ...globals }) %>
-  <!--
-  <script>
-
-    <% if (isClient) { %> fetch(`/api/get-client-account-info`)
-      .then(res => res.json())
-      .then(info => {
-        $('#ucai-address').value = info.address;
-      });
-    <% } %>
-  </script>-->
-
 </body>
 
 </html>
