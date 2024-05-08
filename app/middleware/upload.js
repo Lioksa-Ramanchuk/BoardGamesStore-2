@@ -1,4 +1,5 @@
-import { generateUuid } from '../services/cryptoService.js';
+import * as cryptoService from '../services/cryptoService.js';
+
 import multer from 'multer';
 import path from 'path';
 
@@ -8,7 +9,7 @@ const upload = multer({
       cb(null, path.join(process.env.STATIC_DIR, process.env.UPLOADED_ITEM_IMAGE_DIR));
     },
     filename: (req, file, cb) => {
-      cb(null, `${new Date().getTime()}-${generateUuid()}${path.extname(file.originalname)}`);
+      cb(null, `${new Date().getTime()}-${cryptoService.generateUuid()}${path.extname(file.originalname)}`);
     }
   }),
   fileFilter: function (req, file, cb) {

@@ -1,0 +1,65 @@
+<form id="mof__make-order-form" autocomplete="off">
+  <div class="form-field">
+    <label for="mof__client-address">Адрас</label>
+    <input type="text" id="mof__client-address" name="client_address" required maxlength="255" placeholder="Адрас дастаўкі" />
+  </div>
+  <div class="form-field">
+    <label for="mof__card-number">Нумар карткі</label>
+    <input type="text" id="mof__card-number" name="card_number" required placeholder="XXXX XXXX XXXX XXXX" pattern="^(\s*\d\s*){16}$" title="16 лічбаў" />
+  </div>
+  <div class="form-field">
+    <label for="mof__cvv">CVV</label>
+    <input type="text" id="mof__cvv" name="cvv" required placeholder="XXX" pattern="^\d{3}$" title="3 лічбы" />
+  </div>
+  <div class="form-field">
+    <label for="mof__expiry">Тэрмін дзеяння</label>
+    <input type="text" id="mof__expiry" name="expiry" required placeholder="XX/XX" pattern="^\d\d/\d\d$" />
+  </div>
+  <div class="form-field">
+    <label for="mof__comment">Каментар</label>
+    <input type="text" id="mof__comment" name="comment" maxlength="511" placeholder="Каментар да заказа" />
+  </div>
+  <p id="mof__cart-cost" class="cart-cost"></p>
+  <button type="submit">Аформіць заказ</button>
+</form>
+
+<script>
+  fetch(`/ordering/api/get-client-address`)
+    .then(res => res.json())
+    .then(data => {
+      $('#mof__client-address').value = safe(data.client_address);
+    });
+
+  fetch(`/ordering/api/get-cart-cost`)
+    .then(res => res.json())
+    .then(data => {
+      $('#mof__cart-cost').textContent = `Кошт: ${data.cart_cost.toFixed(2)} Br`;
+    });
+
+  $('#mof__make-order-form').onsubmit = async function(event) {
+    event.preventDefault();
+    let carIsOk = true;
+    await fetch(`/ordering/api/validate-cart`, {
+        method: 'post'
+      })
+      .then(res => {
+        if (!res.ok) {
+          carIsOk = false;
+          return res.text().then(errorMsg => alert(errorMsg));
+        }
+      });
+    if (!carIsOk) return;
+    fetch('/ordering/api/make-order', {
+      method: 'post',
+      body: new FormData(this),
+    }).then(res => {
+      if (!res.ok) {
+        return res.text().then(errorMsg => alert(errorMsg));
+      }
+      res.text().then(msg => {
+        alert(msg);
+        document.location.href = `/orders`;
+      });
+    });
+  }
+</script>

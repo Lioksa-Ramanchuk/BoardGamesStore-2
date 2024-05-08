@@ -12,45 +12,12 @@ export async function handleGetCartItems(req, res, next) {
   }));
   return res.json(items);
 }
-export async function handleGetCartCost(req, res, next) {
-  return res.json({ cart_cost: await cartItemService.getCartCostByAccountId(req.account.id) });
-}
+
 export async function handleClearCart(req, res, next) {
   await cartItemService.deleteByAccountId(req.account.id);
   return res.status(StatusCodes.OK).send('Кошык ачышчаны.');
 }
-export async function handleValidateCart(req, res, next) {
-  let errorMsg = 'Нельга аформіць заказ!';
-  const items = await cartItemService.getAllBriefByAccountId(req.account.id);
-  if (!items.length) {
-    errorMsg += `\nКошык пусты!`;
-    return res.status(StatusCodes.BAD_REQUEST).send(errorMsg);
-  }
-  const notAvailableItems = [];
-  const notEnoughInStockItems = [];
-  items.forEach(item => {
-    if (!item.is_available) {
-      notAvailableItems.push(item);
-      return;
-    }
-    if (item.cart_quantity > item.quantity) {
-      notEnoughInStockItems.push(item);
-      return;
-    }
-  });
-  let cartIsValid = true;
-  if (notAvailableItems.length > 0) {
-    cartIsValid = false;
-    errorMsg += `\nНедаступныя тавары: ${notAvailableItems.map(item => `"${item.title}"`).join(', ')}.`;
-  }
-  if (notEnoughInStockItems.length > 0) {
-    cartIsValid = false;
-    errorMsg += `\nТавараў не хапае ў наяўнасці: ${notEnoughInStockItems.map(item => `"${item.title}" (на складзе: ${item.quantity})`).join(', ')}.`;
-  }
-  return cartIsValid
-    ? res.status(StatusCodes.OK).send('Кошык валідны.')
-    : res.status(StatusCodes.BAD_REQUEST).send(errorMsg);
-}
+
 export async function handleUpdateCartItemQuantity(req, res, next) {
   const { item_id, cart_quantity } = req.body;
   let new_cart_quantity;

@@ -6,6 +6,7 @@ import casl from 'casl';
 import catalogRouter from './catalog.js';
 import favouritesRouter from './favourites.js';
 import itemRouter from './item.js';
+import orderingRouter from './ordering.js';
 import updateItemRouter from './update-item.js';
 
 const router = new Router();
@@ -14,8 +15,9 @@ router.use('/catalog', catalogRouter);
 router.use('/item', itemRouter);
 router.use('/add-item', addItemRouter);
 router.use('/update-item', updateItemRouter);
-router.use('/cart', cartRouter);
 router.use('/favourites', favouritesRouter);
+router.use('/cart', cartRouter);
+router.use('/ordering', orderingRouter);
 router.use('/account', accountRouter);
 
 router.get('/', (req, res) => res.redirect('/catalog'));

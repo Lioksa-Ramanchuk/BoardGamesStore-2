@@ -19,7 +19,7 @@ var globals = { pageName, isAdmin, isClient, isGuest };
         itemsSet.innerHTML = '';
         items.forEach(item => {
           let {
-            id,
+            item_id,
             title,
             price,
             quantity,
@@ -29,7 +29,7 @@ var globals = { pageName, isAdmin, isClient, isGuest };
             is_available,
             is_in_favs
           } = item;
-          id = +id;
+          let id = +item_id;
           title = safe(title);
           price = +price;
           quantity = +quantity;

@@ -1,4 +1,6 @@
 import * as itemService from './itemService.js';
+import * as orderService from './orderService.js';
+import * as orderedItemService from './orderedItemService.js';
 
 import { db } from '../database/db.js';
 
@@ -33,7 +35,8 @@ export async function getAllBriefByAccountId(accountId) {
     include: [{ model: db.items, as: 'item', required: true }]
   });
   const items = cartItems.map(cartItem => ({
-    id: cartItem.item.id,
+    id: cartItem.id,
+    item_id: cartItem.item.id,
     title: cartItem.item.title,
     price: cartItem.item.price,
     quantity: cartItem.item.quantity,
@@ -86,6 +89,17 @@ export async function updateCartItemQuantityByAccountId(itemId, accountId, newCa
 
 export function deleteByItemIdAndAccountId(itemId, accountId) {
   return db.cart_items.destroy({ where: { item_id: itemId, account_id: accountId } });
+}
+
+export async function moveCartItemsToOrderedItemsByOrderId(orderId) {
+  const order = await orderService.getById(orderId);
+  const accountId = order.account_id;
+  const cartItems = (await getAllBriefByAccountId(accountId))
+    .filter(cartItem => cartItem.is_available && cartItem.is_in_stock && cartItem.cart_quantity <= cartItem.quantity);
+  await Promise.all(cartItems.map(async cartItem => {
+    await orderedItemService.create(orderId, cartItem.item_id, cartItem.price, cartItem.cart_quantity);
+    await deleteById(cartItem.id);
+  }));
 }
 
 function dataValues(cartItem) {
