@@ -1,2 +1,3 @@
-export const See = 'see';
-export const SignIn = 'sign in';
+export const Manage = 'manage';
+export const Create = 'create';
+export const View = 'view';

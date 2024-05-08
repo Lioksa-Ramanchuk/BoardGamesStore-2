@@ -11,23 +11,18 @@ export default async function authorize(req, res, next) {
 
   switch (account.role) {
     case Role.Guest:
-      can(Action.SignIn, Subject.AccountView.name);
-      //can(Read, [Subject.ReposAll.name, Subject.CommitsAll.name]);
-      //can(Read, [Subject.Repos.name, Subject.Commits.name]);
       break;
     case Role.Client:
-      //can(Read, Subject.Ability.name);
-      //can(Read, [Subject.ReposAll.name, Subject.CommitsAll.name]);
-      //can(Read, Subject.Account.name, { id: account.id, });
-      //can(Read, [Subject.Repos.name, Subject.Commits.name]);
-      //can(Create, [Subject.Repos.name, Subject.Commits.name]);
-      //can([Update, Delele], [Subject.Repos.name, Subject.Commits.name], { authorId: account.id, });
+      can(Action.Manage, [Subject.Account.name, Subject.ClientAccount.name, Subject.Cart.name, Subject.Favourites.name]);
+      can(Action.Create, Subject.Order.name);
+      can(Action.View, Subject.Order.name, { orderer_id: account.id });
+      can(Action.View, Subject.OrdersList.name);
       break;
     case Role.Admin:
-      //can(Read, Subject.Ability.name);
-      //can(Read, [Subject.ReposAll.name, Subject.CommitsAll.name, Subject.AccountsAll.name]);
-      //can(Read, [Subject.Account.name, Subject.Repos.name, Subject.Commits.name]);
-      //can([Update, Delele], [Subject.Repos.name, Subject.Commits.name]);
+      can(Action.Manage, [Subject.Account.name, Subject.Item.name, Subject.Order.name]);
+      can(Action.Create, Subject.NewAdminAccount.name);
+      can(Action.View, [Subject.Order.name, Subject.Db.name]);
+      can(Action.View, Subject.OrdersList.name);
       break;
     default:
       break;

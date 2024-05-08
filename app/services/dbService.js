@@ -3,6 +3,8 @@ import * as accountService from './accountService.js';
 
 import { db, sequelize } from '../database/db.js';
 
+import { Sequelize } from 'sequelize';
+
 export async function connect() {
   return sequelize.authenticate();
 }
@@ -43,4 +45,23 @@ export async function ensureAdminAccountExist() {
       process.env.DATABASE_DEFAULT_ADMIN_EMAIL
     );
   }
+}
+
+export async function executeSelectQuery(query) {
+  try {
+    if (!isSelectQuery(query)) {
+      throw new Error(`Дапушчальныя толькі SELECT-запыты!`);
+    }
+    const results = await sequelize.query(query, { type: Sequelize.QueryTypes.SELECT });
+    return results;
+  } catch (error) {
+    throw new Error(`Failed to execute query: ${error.message}`);
+  }
+}
+
+function isSelectQuery(query) {
+  query = query.replace(/\s+/g, ' ').trim();
+  const selectRegex = /^SELECT\s.*$/i;
+  const otherStatementsRegex = /(UPDATE|DELETE|INSERT|CREATE|ALTER|DROP)\s/i;
+  return selectRegex.test(query) && !otherStatementsRegex.test(query);
 }

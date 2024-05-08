@@ -64,6 +64,10 @@ export function deleteByAccountId(accountId) {
   return db.cart_items.destroy({ where: { account_id: accountId } });
 }
 
+export function deleteFromAllCartsByItemId(itemId) {
+  return db.cart_items.destroy({ where: { item_id: itemId } });
+}
+
 export async function add(itemId, accountId, quantity = 1) {
   const [cartItem, created] = await db.cart_items.findOrCreate({
     where: { item_id: itemId, account_id: accountId },

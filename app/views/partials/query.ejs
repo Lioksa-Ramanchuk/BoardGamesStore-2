@@ -1,0 +1,29 @@
+<div class="container">
+  <h1>SELECT-запыт да базы даных</h1>
+  <textarea id="query" rows="10" cols="80" placeholder="Увядзіце SELECT-запыт."></textarea>
+  <p><button id="run-query">Выканаць</button></p>
+  <h2>Вынік:</h2>
+  <textarea id="result" rows="10" cols="80" readonly></textarea>
+</div>
+
+<script>
+  const ws = new WebSocket('wss://www.bgstore.com');
+  ws.onopen = () => {
+    console.log('WebSocket connection opened');
+  };
+  ws.onmessage = (event) => {
+    const result = JSON.parse(event.data.toString());
+    $('#result').value = JSON.stringify(result, null, 2);
+  };
+  ws.onerror = (error) => {
+    console.error('WebSocket error:', error);
+  };
+  ws.onclose = () => {
+    console.log('WebSocket connection closed');
+  };
+
+  $('#run-query').addEventListener('click', () => {
+    const query = $('#query').value;
+    ws.send(query);
+  });
+</script>

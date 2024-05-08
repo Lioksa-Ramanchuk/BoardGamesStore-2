@@ -3,6 +3,7 @@ import 'dotenv/config';
 import * as dbService from './services/dbService.js';
 import * as redisService from './services/redisService.js';
 
+import { WebSocketServer } from 'ws';
 import asyncHandler from 'express-async-handler';
 import authenticateMiddleware from './middleware/authenticate.js';
 import authorizeMiddleware from './middleware/authorize.js';
@@ -40,6 +41,23 @@ const server = await (async () => {
   console.error(err);
   console.log(`Server didn't start due to error`);
   process.exit(1);
+});
+
+const wss = new WebSocketServer({ server: server });
+wss.on('connection', (ws) => {
+  console.log('New WebSocket connection!');
+  ws.on('message', async (message) => {
+    try {
+      const results = await dbService.executeSelectQuery(message.toString());
+      ws.send(JSON.stringify(results));
+    } catch (error) {
+      console.error(error);
+      ws.send(JSON.stringify({ error: `Error: ${error.message}` }));
+    }
+  });
+  ws.on('close', () => {
+    console.log('WebSocket connection closed.');
+  });
 });
 
 process.on('SIGINT', async () => {

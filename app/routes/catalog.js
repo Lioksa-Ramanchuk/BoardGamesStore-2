@@ -4,10 +4,8 @@ import * as catalogController from '../controllers/catalog.js';
 import * as commonApiController from '../controllers/commonApi.js';
 
 import { Router } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import asyncHandler from 'express-async-handler';
 import checkAbility from '../middleware/checkAbility.js';
-import upload from '../middleware/upload.js';
 
 const router = new Router({ mergeParams: true });
 
@@ -19,15 +17,10 @@ router.use('/api', apiRouter);
 
 apiRouter.get('/get-catalog',
   asyncHandler(catalogController.handleGetCatalog));
-apiRouter.post('/toggle-in-favs/:item_id', asyncHandler(paramsItemId),
+apiRouter.post('/toggle-in-favs/:item_id', asyncHandler(paramsItemId), asyncHandler(checkAbility(Action.Manage, new Subject.Favourites())),
   asyncHandler(commonApiController.handleToggleFavouriteItem));
-apiRouter.post('/toggle-in-cart/:item_id', asyncHandler(paramsItemId),
+apiRouter.post('/toggle-in-cart/:item_id', asyncHandler(paramsItemId), asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(commonApiController.handleToggleCartItem));
-
-apiRouter.use((err, req, res, next) => {
-  console.error(err);
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end(err.message);
-});
 
 export default router;
 

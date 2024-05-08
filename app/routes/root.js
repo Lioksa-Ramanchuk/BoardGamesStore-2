@@ -9,6 +9,7 @@ import favouritesRouter from './favourites.js';
 import itemRouter from './item.js';
 import orderingRouter from './ordering.js';
 import ordersRouter from './orders.js';
+import queryRouter from './query.js';
 import updateItemRouter from './update-item.js';
 
 const router = new Router();
@@ -23,6 +24,7 @@ router.use('/ordering', orderingRouter);
 router.use('/orders', ordersRouter);
 router.use('/about', aboutRouter);
 router.use('/account', accountRouter);
+router.use('/query', queryRouter);
 
 router.get('/', (req, res) => res.redirect('/catalog'));
 

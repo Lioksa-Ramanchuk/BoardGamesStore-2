@@ -1,3 +1,9 @@
 export class Account { };
-export class AccountView { };
+export class NewAdminAccount { };
 export class ClientAccount { };
+export class Item { };
+export class Cart { };
+export class Favourites { };
+export class Order { };
+export class OrdersList { };
+export class Db { };

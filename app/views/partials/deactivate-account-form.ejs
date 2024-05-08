@@ -15,7 +15,7 @@
         }
         res.text().then(msg => alert(msg));
         document.location.href = `/<%= pageName %>`;
-      });
+      }).catch(err => console.error(err));
     }
   }
 </script>

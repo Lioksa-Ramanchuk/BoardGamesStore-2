@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="be">
+
+<head>
+  <title>SQL-запыты | Інтэрнэт-крама настольных гульняў</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel='icon' href='/images/interface/icon.png' />
+  <link rel="stylesheet" type="text/css" href="/style/query.css" />
+</head>
+
+<%
+var pageName = 'query';
+var isAdmin = account.role === process.env.DATABASE_ADMIN_ROLE_TITLE;
+var isClient = account.role === process.env.DATABASE_CLIENT_ROLE_TITLE;
+var isGuest = !isAdmin && !isClient;
+var globals = { pageName, isAdmin, isClient, isGuest };
+%>
+
+<body>
+  <script src='/script/common.js'></script>
+
+  <%- include('./partials/header.ejs', { ...globals }) %>
+  <div class="content">
+    <%- include('./partials/menu.ejs', { ...globals }) %>
+    <main>
+      <%- include('./partials/query.ejs', { ...globals }) %>
+    </main>
+  </div>
+  <%- include('./partials/footer.ejs', { ...globals }) %>
+</body>
+
+</html>

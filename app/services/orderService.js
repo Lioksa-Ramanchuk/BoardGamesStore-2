@@ -21,17 +21,19 @@ export async function create(accountId, orderComment, clientFullname, clientEmai
 }
 
 export async function getById(id) {
-  return dataValues(await db.orders.findByPk(id, {
+  const order = await db.orders.findByPk(id, {
     include: [
       { model: db.order_statuses, as: 'status', required: true }
     ]
-  }));
+  });
+  if (!order) return null;
+  return dataValues(order);
 }
 
 export function generateOrderCode() {
   const part1 = Math.floor(Math.random() * 65536).toString(16).padStart(4, '0');
   const part2 = Math.floor(Math.random() * 65536).toString(16).padStart(4, '0');
-  return `${part1}-${part2}`;
+  return `${part1}-${part2}`.toUpperCase();
 }
 
 export async function getAllBrief() {

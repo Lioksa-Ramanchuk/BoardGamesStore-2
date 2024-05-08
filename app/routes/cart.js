@@ -4,38 +4,31 @@ import * as cartController from '../controllers/cart.js';
 import * as commonApiController from '../controllers/commonApi.js';
 
 import { Router } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import asyncHandler from 'express-async-handler';
 import checkAbility from '../middleware/checkAbility.js';
-import upload from '../middleware/upload.js';
 
 const router = new Router({ mergeParams: true });
 
-router.get('/',
+router.get('/', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(async (req, res) => res.render('cart', { account: req.account })));
 
 const apiRouter = new Router({ mergeParams: true });
 router.use('/api', apiRouter);
 
-apiRouter.get('/get-cart-items',
+apiRouter.get('/get-cart-items', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(cartController.handleGetCartItems));
-apiRouter.get('/get-cart-cost',
+apiRouter.get('/get-cart-cost', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(commonApiController.handleGetCartCost));
-apiRouter.post('/validate-cart',
+apiRouter.post('/validate-cart', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(commonApiController.handleValidateCart));
-apiRouter.post('/clear-cart',
+apiRouter.post('/clear-cart', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(cartController.handleClearCart));
-apiRouter.post('/update-cart-item-quantity',
+apiRouter.post('/update-cart-item-quantity', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(cartController.handleUpdateCartItemQuantity));
-apiRouter.post('/toggle-in-favs/:item_id', asyncHandler(paramsItemId),
+apiRouter.post('/toggle-in-favs/:item_id', asyncHandler(paramsItemId), asyncHandler(checkAbility(Action.Manage, new Subject.Favourites())),
   asyncHandler(commonApiController.handleToggleFavouriteItem));
-apiRouter.post('/toggle-in-cart/:item_id', asyncHandler(paramsItemId),
+apiRouter.post('/toggle-in-cart/:item_id', asyncHandler(paramsItemId), asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(commonApiController.handleToggleCartItem));
-
-apiRouter.use((err, req, res, next) => {
-  console.error(err);
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end(err.message);
-});
 
 export default router;
 

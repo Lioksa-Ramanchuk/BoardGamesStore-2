@@ -1,40 +1,28 @@
 import * as Action from '../security/action.js';
 import * as Subject from '../security/subject.js';
-import * as cartController from '../controllers/cart.js';
 import * as commonApiController from '../controllers/commonApi.js';
 import * as orderingController from '../controllers/ordering.js';
 
 import { Router } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import asyncHandler from 'express-async-handler';
 import checkAbility from '../middleware/checkAbility.js';
 import upload from '../middleware/upload.js';
 
 const router = new Router({ mergeParams: true });
 
-router.get('/',
+router.get('/', asyncHandler(checkAbility(Action.Create, new Subject.Order())),
   asyncHandler(async (req, res) => res.render('ordering', { account: req.account })));
 
 const apiRouter = new Router({ mergeParams: true });
 router.use('/api', apiRouter);
 
-apiRouter.get('/get-client-address',
+apiRouter.get('/get-client-address', asyncHandler(checkAbility(Action.Manage, new Subject.ClientAccount())),
   asyncHandler(orderingController.handleGetClientAddress));
-apiRouter.get('/get-cart-cost',
+apiRouter.get('/get-cart-cost', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(commonApiController.handleGetCartCost));
-apiRouter.post('/validate-cart',
+apiRouter.post('/validate-cart', asyncHandler(checkAbility(Action.Manage, new Subject.Cart())),
   asyncHandler(commonApiController.handleValidateCart));
-apiRouter.post('/make-order',
+apiRouter.post('/make-order', asyncHandler(checkAbility(Action.Create, new Subject.Order())),
   upload.none(), asyncHandler(orderingController.handleMakeOrder));
 
-apiRouter.use((err, req, res, next) => {
-  console.error(err);
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end(err.message);
-});
-
 export default router;
-
-async function paramsItemId(req, res, next) {
-  req.params.item_id = parseInt(req.params.item_id);
-  return next();
-}
