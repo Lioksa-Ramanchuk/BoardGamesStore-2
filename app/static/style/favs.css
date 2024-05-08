@@ -3,5 +3,5 @@
 @import './utils/buttons-row.css';
 
 .buttons-row {
-    justify-content: space-between;
+  justify-content: end;
 }

@@ -1,0 +1,185 @@
+<%
+var globals = { pageName, isAdmin, isClient, isGuest };
+%>
+
+<div class="container-upper">
+  <div>
+    <table id="orders-list" class="orders-list">
+      <thead>
+        <tr>
+          <th>Нумар заказа</th>
+          <th>Дата</th>
+          <th>Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+  <div id="order-info" class="order-info"></div>
+</div>
+<%- include('./items-set.ejs', { ...globals }) %>
+
+<script>
+  loadOrdersList();
+  <% if (locals.order_id) { %>
+  loadOrder(<%= order_id %>);
+  <% } %>
+
+  function loadOrdersList() {
+    <% if (isAdmin) { %>
+    fetch(`/orders/api/get-all-orders-list`)
+    <% } else { %>
+    fetch(`/orders/api/get-client-orders-list`)
+    <% } %>
+      .then(res => res.json())
+      .then(orders => {
+        const ordersList = $('#orders-list tbody');
+        ordersList.innerHTML = '';
+        orders.forEach(order => {
+          let {
+            id,
+            code,
+            date,
+            status
+          } = order;
+          date = sysdateToLocalDate(date);
+          ordersList.innerHTML += `
+            <tr id="orders-list-entry-${id}" onclick="window.location.href = '/orders/${id}';">
+              <td>${code}</td>
+              <td>${date.toLocaleDateString()}</td>
+              <td>${translateOSName(status)}</td>
+            </tr>
+          `;
+        });
+      });
+  }
+
+  function loadOrder(order_id) {
+    fetch(`/orders/api/get-order-info/${order_id}`)
+      .then(res => res.json())
+      .then(info => {
+        let date = sysdateToLocalDate(info.order_date);
+        $('#order-info').innerHTML = `
+          <h1 class="o-title">Заказ № ${info.code}</h1>
+          <table class="o-details">
+            <tr>
+              <td>Дата</td>
+              <td>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</td>
+            </tr>
+            <tr>
+              <td>Статус</td>
+              <td>
+                <% if (isAdmin) { %>
+                <select id="order-status" onchange="updateOrderStatus(${order_id})"></select>
+                <% } else { %>
+                ${translateOSName(info.status)}
+                <% } %>
+              </td>
+            </tr>
+            <tr>
+              <td>Каментар</td>
+              <td>${(info.order_comment || '-')}</td>
+            </tr>
+            <tr>
+              <td>Кошт</td>
+              <td>${info.order_cost.toFixed(2)} Br</td>
+            </tr>
+            <tr>
+              <td>Кліент</td>
+              <td>${info.client_fullname}</td>
+            </tr>
+            <tr>
+              <td>Email кліента</td>
+              <td>${info.client_email}</td>
+            </tr>
+            <tr>
+              <td>Адрас дастаўкі</td>
+              <td>${info.client_address}</td>
+            </tr>
+          </table>
+        `;
+        <% if (isAdmin) { %>
+        fetch(`/orders/api/get-order-statuses`)
+          .then(res => res.json())
+          .then(data => {
+            const orderStatus = $(`#order-status`);
+            orderStatus.innerHTML = '';
+            data.forEach(item => {
+              let {
+                id,
+                title
+              } = item;
+              orderStatus.innerHTML += `
+                <option id="os-${id}" value="${title}">${translateOSName(title)}</option>
+              `;
+            });
+            orderStatus.value = info.status;
+          });
+        <% } %>
+      });
+
+    fetch(`/orders/api/get-order-items/${order_id}`)
+      .then(res => res.json())
+      .then(items => {
+        const itemsSet = $('#is__items-set');
+        itemsSet.innerHTML = '';
+        items.forEach(item => {
+          let {
+            item_id,
+            title,
+            price,
+            quantity,
+            image
+          } = item;
+          title = safe(title);
+          image = safe(image);
+          itemsSet.innerHTML += `
+            <div id="item-${item_id}" class="item-block" onclick="window.location.href = '/item/${item_id}';">
+              <img src="${image}" class="item-image"/>
+              <p class="item-title">${title}</p>
+              <p class="item-price">${price.toFixed(2)} Br</p>
+              <p class="item-quantity">Колькасць: <b>${quantity} шт.</b></p>
+            </div>
+          `;
+        });
+      });
+  }
+
+  <% if (isAdmin) { %>
+
+  function updateOrderStatus(order_id) {
+    let new_title = $(`#order-status`).value;
+    fetch('/orders/api/set-order-status', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        order_id,
+        new_title
+      }),
+    }).then(() => loadOrdersList());
+  }
+  <% } %>
+
+  function sysdateToLocalDate(sysdate) {
+    sysdate = new Date(sysdate);
+    var newDate = new Date(sysdate.getTime() + sysdate.getTimezoneOffset() * 60 * 1000);
+    var offset = sysdate.getTimezoneOffset() / 60;
+    var hours = sysdate.getHours();
+    newDate.setHours(hours - offset);
+    return newDate;
+  }
+
+  function translateOSName(osName) {
+    switch (osName) {
+      case '<%= process.env.DATABASE_PROCESSING_ORDER_STATUS_TITLE %>':
+        return 'у апрацоўцы';
+      case '<%= process.env.DATABASE_DELIVERED_ORDER_STATUS_TITLE %>':
+        return 'дастаўлены';
+      default:
+        return osName;
+    }
+  }
+</script>

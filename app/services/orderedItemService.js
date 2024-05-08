@@ -15,12 +15,22 @@ export async function getById(id) {
   return dataValues(await db.ordered_items.findByPk(id));
 }
 
-async function dataValues(orderedItem) {
+export async function getAllBriefByOrderId(orderId) {
+  const orderItems = await db.ordered_items.findAll({
+    where: { order_id: orderId },
+    include: [{ model: db.items, as: 'item', required: true }]
+  });
+  return orderItems.map(orderedItem => dataValues(orderedItem));
+}
+
+function dataValues(orderedItem) {
   return {
     id: orderedItem.id,
     order_id: orderedItem.order_id,
     item_id: orderedItem.item_id,
     price: orderedItem.price,
     quantity: orderedItem.quantity,
+    title: orderedItem.item?.title,
+    image: orderedItem.item?.image,
   };
 }

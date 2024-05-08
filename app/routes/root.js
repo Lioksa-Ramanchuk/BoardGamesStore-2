@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import aboutRouter from './about.js';
 import accountRouter from './account.js';
 import addItemRouter from './add-item.js';
 import cartRouter from './cart.js';
@@ -7,6 +8,7 @@ import catalogRouter from './catalog.js';
 import favouritesRouter from './favourites.js';
 import itemRouter from './item.js';
 import orderingRouter from './ordering.js';
+import ordersRouter from './orders.js';
 import updateItemRouter from './update-item.js';
 
 const router = new Router();
@@ -18,6 +20,8 @@ router.use('/update-item', updateItemRouter);
 router.use('/favourites', favouritesRouter);
 router.use('/cart', cartRouter);
 router.use('/ordering', orderingRouter);
+router.use('/orders', ordersRouter);
+router.use('/about', aboutRouter);
 router.use('/account', accountRouter);
 
 router.get('/', (req, res) => res.redirect('/catalog'));

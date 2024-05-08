@@ -1,1 +1,17 @@
 @import './common.css';
+
+.text {
+  margin: 10px 20px;
+}
+
+.text>p {
+  margin: 5px 0;
+}
+
+.text>ul {
+  list-style-position: inside;
+}
+
+.text>.blue {
+  color: rgb(59, 98, 238);
+}
