@@ -61,7 +61,7 @@ export async function executeSelectQuery(query) {
 
 function isSelectQuery(query) {
   query = query.replace(/\s+/g, ' ').trim();
-  const selectRegex = /^SELECT\s.*$/i;
-  const otherStatementsRegex = /(UPDATE|DELETE|INSERT|CREATE|ALTER|DROP)\s/i;
+  const selectRegex = /^SELECT\b/i;
+  const otherStatementsRegex = /\b(UPDATE|DELETE|INSERT|CREATE|ALTER|DROP)\b/i;
   return selectRegex.test(query) && !otherStatementsRegex.test(query);
 }

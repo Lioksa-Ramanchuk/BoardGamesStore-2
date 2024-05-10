@@ -7,8 +7,3 @@
   object-fit: cover;
   border-radius: 15px;
 }
-
-.success-msg,
-.error-msg {
-  margin: 20px 0;
-}

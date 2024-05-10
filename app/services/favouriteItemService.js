@@ -23,7 +23,7 @@ export async function toggle(itemId, accountId) {
 export async function getByItemIdAndAccountId(itemId, accountId) {
   const favItem = await db.favourite_items.findOne({ where: { item_id: itemId, account_id: accountId } });
   if (!favItem) return null;
-  return getFullById(favItem.id);
+  return getById(favItem.id);
 }
 
 export async function getAllBriefByAccountId(accountId) {
@@ -73,10 +73,10 @@ export async function add(itemId, accountId) {
     defaults: { item_id: itemId, account_id: accountId }
   });
   if (!favItem) return null;
-  return getFullById(favItem.id);
+  return getById(favItem.id);
 }
 
-export async function getFullById(id) {
+export async function getById(id) {
   const favItem = await db.favourite_items.findByPk(id);
   return dataValues(favItem);
 }

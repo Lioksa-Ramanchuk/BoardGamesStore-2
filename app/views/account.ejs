@@ -35,7 +35,7 @@ var globals = { pageName, isAdmin, isClient, isGuest };
         <% } %>
         <% if (isAdmin) { %>
         <%- include('./partials/update-account-info-form.ejs', { ...globals }) %>
-        <%- include('./partials/create-new-admin-account.ejs', { ...globals }) %>
+        <%- include('./partials/create-new-admin-account-form.ejs', { ...globals }) %>
         <% } %>
       </div>
       <hr />

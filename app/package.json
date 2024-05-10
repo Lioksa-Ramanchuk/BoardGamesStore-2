@@ -24,12 +24,10 @@
   "homepage": "https://github.com/Lioksa-Ramanchuk/board-games-store#readme",
   "dependencies": {
     "@google-cloud/secret-manager": "^5.5.0",
-    "aes-js": "^3.1.2",
     "argon2": "^0.40.1",
     "body-parser": "^1.20.2",
     "casl": "^1.1.0",
     "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
@@ -43,8 +41,6 @@
     "sequelize": "^6.37.3",
     "sequelize-auto": "^0.8.8",
     "tedious": "^18.2.0",
-    "uninstall": "^0.0.0",
-    "uuid": "^9.0.1",
     "ws": "^8.17.0"
   },
   "type": "module",

@@ -75,7 +75,6 @@ export async function handleCreateNewAdminAccount(req, res, next) {
 
 export async function handleDeactivateAccount(req, res, next) {
   await accountService.deactivateById(req.account.id);
-  //return res.redirect('/account/api/sign-out', StatusCodes.TEMPORARY_REDIRECT);
   cookieService.clearAccessToken(res);
   cookieService.clearRefreshToken(res);
   return res.status(StatusCodes.OK).send('Акаўнт дэактывіяваны паспяхова.');
@@ -91,7 +90,6 @@ export async function handleReactivateAccount(req, res, next) {
   if (!account.is_active) {
     await accountService.activateById(account.id);
   }
-  //return res.redirect('/account/api/sign-in', StatusCodes.TEMPORARY_REDIRECT);
   const accountUuid = cryptoService.generateUuid();
   const accessToken = jwtService.generateAccessToken(account.id, account.role.title, accountUuid);
   const refreshToken = jwtService.generateRefreshToken(account.id, account.role.title, accountUuid);

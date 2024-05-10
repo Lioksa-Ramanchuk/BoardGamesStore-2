@@ -84,6 +84,10 @@ export async function getById(id) {
 
 export async function updateCartItemQuantityByAccountId(itemId, accountId, newCartQuantity) {
   const itemQuantity = (await itemService.getById(itemId)).quantity;
+  if (itemQuantity === 0) {
+    deleteByItemIdAndAccountId(itemId, accountId);
+    return null;
+  }
   await db.cart_items.update(
     { quantity: Math.min(itemQuantity, newCartQuantity) },
     { where: { item_id: itemId, account_id: accountId } }

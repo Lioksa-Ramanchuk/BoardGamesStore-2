@@ -20,10 +20,11 @@ export async function handleClearCart(req, res, next) {
 
 export async function handleUpdateCartItemQuantity(req, res, next) {
   const { item_id, cart_quantity } = req.body;
+  let item = await itemService.getById(item_id);
   let new_cart_quantity;
-  if (cart_quantity > 0) {
-    const item = await cartItemService.updateCartItemQuantityByAccountId(item_id, req.account.id, cart_quantity);
-    new_cart_quantity = item.quantity;
+  if (item.quantity > 0 && cart_quantity > 0) {
+    item = await cartItemService.updateCartItemQuantityByAccountId(item_id, req.account.id, cart_quantity);
+    new_cart_quantity = item?.quantity || 0;
   } else {
     await cartItemService.deleteByItemIdAndAccountId(item_id, req.account.id);
     new_cart_quantity = 0;

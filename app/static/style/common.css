@@ -68,14 +68,6 @@ main {
   padding: 20px;
 }
 
-.success-msg {
-  color: green;
-}
-
-.error-msg {
-  color: #BB5050;
-}
-
 .hidden {
   display: none;
 }
